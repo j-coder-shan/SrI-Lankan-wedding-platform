@@ -1,0 +1,36 @@
+server:
+  port: 8080 # Default fallback port
+
+spring:
+  application:
+    name: wedding-platform
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  # Date format for JSON
+  jackson:
+    date-format: yyyy-MM-dd
+    serialization:
+      write-dates-as-timestamps: false
+
+# Actuator (Health Checks)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+  endpoint:
+    health:
+      show-details: always
+
+# Service Registry Location
+# Connects to localhost:8761 because you run apps in IDE
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
