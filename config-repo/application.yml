@@ -10,8 +10,8 @@ spring:
       enabled: true
       force: true
   jackson:
-    write-dates-as-timestamps: false
-    indentation-output: true
+    date-format: yyyy-MM-dd
+    time-zone: UTC
 
 # Actuator (Health Checks)
 management:
