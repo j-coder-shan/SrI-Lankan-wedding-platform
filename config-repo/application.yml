@@ -12,8 +12,7 @@ spring:
   # Date format for JSON
   jackson:
     date-format: yyyy-MM-dd
-    serialization:
-      write-dates-as-timestamps: false
+    time-zone: UTC
 
 # Actuator (Health Checks)
 management:
