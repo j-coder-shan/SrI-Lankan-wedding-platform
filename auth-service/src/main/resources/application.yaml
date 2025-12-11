@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: auth-service
+  config:
+    # Connect to Config Server on port 8888
+    import: "optional:configserver:http://localhost:8888/"
