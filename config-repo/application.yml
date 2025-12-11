@@ -9,7 +9,6 @@ spring:
       charset: UTF-8
       enabled: true
       force: true
-  # Date format for JSON
   jackson:
     date-format: yyyy-MM-dd
     time-zone: UTC
