@@ -9,11 +9,9 @@ spring:
       charset: UTF-8
       enabled: true
       force: true
-  # Date format for JSON
   jackson:
     date-format: yyyy-MM-dd
-    serialization:
-      write-dates-as-timestamps: false
+    time-zone: UTC
 
 # Actuator (Health Checks)
 management:
