@@ -1,0 +1,164 @@
+{
+  "info": {
+    "name": "Chat Service API",
+    "description": "API endpoints for Sri Lankan Wedding Platform - Chat Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Conversations",
+      "item": [
+        {
+          "name": "Start/Get Conversation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/api/chat/start/:enquiryId?coupleId=101&coupleName=John and Jane&vendorId=201&vendorName=Dream Venue",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["api", "chat", "start", ":enquiryId"],
+              "query": [
+                {
+                  "key": "coupleId",
+                  "value": "101",
+                  "description": "ID of the couple"
+                },
+                {
+                  "key": "coupleName",
+                  "value": "John and Jane",
+                  "description": "Name of the couple"
+                },
+                {
+                  "key": "vendorId",
+                  "value": "201",
+                  "description": "ID of the vendor"
+                },
+                {
+                  "key": "vendorName",
+                  "value": "Dream Venue",
+                  "description": "Name of the vendor"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "enquiryId",
+                  "value": "1",
+                  "description": "ID of the enquiry"
+                }
+              ]
+            },
+            "description": "Start a new conversation or retrieve an existing one for an enquiry. Returns the conversation ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Conversations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Auth-User-Id",
+                "value": "101",
+                "description": "Current user's ID",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8083/api/chat/conversations/me",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["api", "chat", "conversations", "me"]
+            },
+            "description": "Get all conversations for the current user. Returns a list of conversation DTOs."
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Conversation as Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Auth-User-Id",
+                "value": "101",
+                "description": "Current user's ID",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8083/api/chat/read/:conversationId",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["api", "chat", "read", ":conversationId"],
+              "variable": [
+                {
+                  "key": "conversationId",
+                  "value": "65a1234567890abcdef12345",
+                  "description": "ID of the conversation to mark as read"
+                }
+              ]
+            },
+            "description": "Mark all unread messages in a conversation as read for the current user."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Get Message History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/api/chat/history/:conversationId?page=0&size=50",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["api", "chat", "history", ":conversationId"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0",
+                  "description": "Page number (0-indexed)"
+                },
+                {
+                  "key": "size",
+                  "value": "50",
+                  "description": "Number of messages per page"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "conversationId",
+                  "value": "65a1234567890abcdef12345",
+                  "description": "ID of the conversation"
+                }
+              ]
+            },
+            "description": "Get paginated message history for a specific conversation. Returns a page of message DTOs."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8083",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "101",
+      "type": "string"
+    }
+  ]
+}
