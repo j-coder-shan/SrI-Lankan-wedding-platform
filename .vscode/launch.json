@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "NotificationServiceApplication",
+            "request": "launch",
+            "mainClass": "com.booking.notificationservice.NotificationServiceApplication",
+            "projectName": "notification-service"
+        },
+        {
+            "type": "java",
+            "name": "CalendarServiceApplication",
+            "request": "launch",
+            "mainClass": "com.booking.calendarservice.CalendarServiceApplication",
+            "projectName": "calendar-service"
+        },
+        {
+            "type": "java",
+            "name": "EnquiryServiceApplication",
+            "request": "launch",
+            "mainClass": "com.booking.enquiryservice.EnquiryServiceApplication",
+            "projectName": ""
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
