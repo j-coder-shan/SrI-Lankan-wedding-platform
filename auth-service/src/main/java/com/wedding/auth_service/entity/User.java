@@ -41,6 +41,7 @@ public class User implements UserDetails {
     private Role role;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean isActive = true;
 
     // --- UserDetails Implementation (Required by Spring Security) ---
