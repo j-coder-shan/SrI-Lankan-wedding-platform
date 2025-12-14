@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ApiGatewayApplication",
+            "request": "launch",
+            "mainClass": "com.wedding.api_gateway.ApiGatewayApplication",
+            "projectName": "api-gateway"
+        },
+        {
+            "type": "java",
             "name": "NotificationServiceApplication",
             "request": "launch",
             "mainClass": "com.booking.notificationservice.NotificationServiceApplication",
