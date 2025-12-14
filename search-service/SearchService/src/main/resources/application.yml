@@ -8,11 +8,10 @@ spring:
     import: "optional:configserver:http://localhost:8888"
 
   # --- PRIMARY PERSISTENCE: MongoDB (Task 2.1) ---
+ 
   data:
     mongodb:
-      host: localhost
-      port: 27017 
-      database: wedease_search_db
+      uri: mongodb+srv://ridmichamoda_db_user:5DXgQiZ2B8X463zs@cluster0.5b5etky.mongodb.net/wedease_search_db?retryWrites=true&w=majority
       auto-index-creation: true
 
   # --- KAFKA CONSUMER CONFIGURATION (Task 2.3) ---
