@@ -1,0 +1,20 @@
+# src/main/resources/bootstrap.yml
+
+spring:
+  application:
+    name: ReviewService
+  cloud:
+    config:
+      # Assuming Config Server is running on localhost:8888 (default)
+      uri: http://localhost:8888
+      fail-fast: true
+
+server:
+  port: 8083 # A unique port for the review service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${instanceId:${random.value}}
