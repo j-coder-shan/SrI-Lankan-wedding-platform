@@ -1,0 +1,31 @@
+server:
+  port: 8082 # Unique port for Search Service
+
+spring:
+  application:
+    name: SearchService
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
+  # --- PRIMARY PERSISTENCE: MongoDB (Task 2.1) ---
+ 
+  data:
+    mongodb:
+      uri: mongodb+srv://ridmichamoda_db_user:5DXgQiZ2B8X463zs@cluster0.5b5etky.mongodb.net/wedease_search_db?retryWrites=true&w=majority
+      auto-index-creation: true
+
+  # --- KAFKA CONSUMER CONFIGURATION (Task 2.3) ---
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: search-group # Task 2.3: groupId
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        "[spring.json.trusted.packages]": "*" # Allows JSON deserialization
+
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
