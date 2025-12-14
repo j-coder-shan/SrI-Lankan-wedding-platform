@@ -17,6 +17,10 @@
             "request": "launch",
             "mainClass": "com.wedding.listingService.ListingServiceApplication",
             "projectName": "demo"
+            "name": "ApiGatewayApplication",
+            "request": "launch",
+            "mainClass": "com.wedding.api_gateway.ApiGatewayApplication",
+            "projectName": "api-gateway"
         },
         {
             "type": "java",

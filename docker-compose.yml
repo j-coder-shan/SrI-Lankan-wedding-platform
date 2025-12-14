@@ -17,7 +17,7 @@ services:
     networks:
       - wedding-network
     ports:
-      - "3306:3306"
+      - "3307:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -106,6 +106,20 @@ services:
       - wedding-network
     depends_on:
       - kafka
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5050:80"
+    networks:
+      - wedding-network
+    depends_on:
+      postgres-db:
+        condition: service_healthy
 
 volumes:
   mysql_data:
