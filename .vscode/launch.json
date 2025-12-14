@@ -1,0 +1,56 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "NotificationServiceApplication",
+            "request": "launch",
+            "mainClass": "com.booking.notificationservice.NotificationServiceApplication",
+            "projectName": "notification-service"
+        },
+        {
+            "type": "java",
+            "name": "CalendarServiceApplication",
+            "request": "launch",
+            "mainClass": "com.booking.calendarservice.CalendarServiceApplication",
+            "projectName": "calendar-service"
+        },
+        {
+            "type": "java",
+            "name": "EnquiryServiceApplication",
+            "request": "launch",
+            "mainClass": "com.booking.enquiryservice.EnquiryServiceApplication",
+            "projectName": ""
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "AuthServiceApplication",
+            "request": "launch",
+            "mainClass": "com.wedding.auth_service.AuthServiceApplication",
+            "projectName": "auth-service"
+        },
+        {
+            "type": "java",
+            "name": "ConfigServerApplication",
+            "request": "launch",
+            "mainClass": "com.wedding.config_server.ConfigServerApplication",
+            "projectName": "config-server"
+        },
+        {
+            "type": "java",
+            "name": "EurekaServerApplication",
+            "request": "launch",
+            "mainClass": "com.wedding.eureka_server.EurekaServerApplication",
+            "projectName": "eureka-server"
+        }
+    ]
+}
