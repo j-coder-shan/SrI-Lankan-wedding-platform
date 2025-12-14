@@ -6,6 +6,17 @@
     "configurations": [
         {
             "type": "java",
+            "name": "SearchServiceApplication",
+            "request": "launch",
+            "mainClass": "com.wedding.SearchService.SearchServiceApplication",
+            "projectName": "SearchService"
+        },
+        {
+            "type": "java",
+            "name": "ListingServiceApplication",
+            "request": "launch",
+            "mainClass": "com.wedding.listingService.ListingServiceApplication",
+            "projectName": "demo"
             "name": "ApiGatewayApplication",
             "request": "launch",
             "mainClass": "com.wedding.api_gateway.ApiGatewayApplication",
