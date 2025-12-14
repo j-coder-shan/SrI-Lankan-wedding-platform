@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -22,6 +24,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+
+    // List of public endpoints that don't require JWT authentication
+    private static final List<String> PUBLIC_ENDPOINTS = Arrays.asList(
+            "/auth/register",
+            "/auth/login",
+            "/auth/refresh-token",
+            "/auth/forgot-password",
+            "/actuator");
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return PUBLIC_ENDPOINTS.stream().anyMatch(path::startsWith);
+    }
 
     @Override
     protected void doFilterInternal(
