@@ -4,35 +4,32 @@ import com.example.financial.enums.PaymentMethod;
 import com.example.financial.enums.ListingStatus;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Data;
 import java.math.BigDecimal;
 
 public class InvoiceDTOs {
 
-    @Data
     public static class InvoiceCreationRequest {
         @NotNull(message = "Enquiry ID is required")
-        private Long enquiryId;
+        public Long enquiryId;
 
         @NotNull(message = "Vendor ID is required")
-        private Long vendorId;
+        public Long vendorId;
 
         @NotNull(message = "Listing ID is required")
-        private Long listingId;
+        public Long listingId;
 
         @NotNull(message = "Category is required")
-        private ListingStatus category;
+        public ListingStatus category;
 
         @NotNull
         @Positive(message = "Price must be positive")
-        private BigDecimal finalPrice;
+        public BigDecimal finalPrice;
     }
 
-    @Data
     public static class PaymentRequest {
         @NotNull(message = "Payment Method is required")
-        private PaymentMethod method;
+        public PaymentMethod method;
 
-        private String referenceNo;
+        public String referenceNo;
     }
 }
