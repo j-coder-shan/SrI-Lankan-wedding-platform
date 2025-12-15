@@ -5,7 +5,6 @@ spring:
     name: ReviewService
   cloud:
     config:
-      # Assuming Config Server is running on localhost:8888 (default)
       uri: http://localhost:8888
       fail-fast: true
 

@@ -8,6 +8,13 @@
             "type": "java",
             "name": "ReviewServiceApplication",
             "request": "launch",
+            "mainClass": "com.wedding.reviewService.ReviewServiceApplication",
+            "projectName": "ReviewService"
+        },
+        {
+            "type": "java",
+            "name": "ReviewServiceApplication",
+            "request": "launch",
             "mainClass": "com.example.ReviewService.ReviewServiceApplication",
             "projectName": ""
         },

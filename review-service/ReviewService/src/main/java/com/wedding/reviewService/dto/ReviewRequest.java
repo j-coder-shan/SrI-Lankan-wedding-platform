@@ -2,7 +2,6 @@ package com.wedding.reviewService.dto;
 
 import lombok.Data;
 
-// DTO for incoming POST /api/reviews request
 @Data
 public class ReviewRequest {
     private Long listingId;

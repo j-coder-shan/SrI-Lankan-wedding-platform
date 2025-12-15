@@ -17,10 +17,6 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    /**
-     * Task 3.2: Handles POST /api/reviews
-     * Saves the review and triggers the rating sync logic.
-     */
     @PostMapping
     public ResponseEntity<Review> createReview(@RequestBody ReviewRequest reviewRequest) {
         Review savedReview = reviewService.createReviewAndSyncRating(reviewRequest);

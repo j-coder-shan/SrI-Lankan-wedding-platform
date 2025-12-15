@@ -13,14 +13,14 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long listingId; // Task 3.1
-    private Long userId; // Task 3.1 (ID of the reviewing user)
-    private Integer rating; // Task 3.1 (1-5)
+    private Long listingId; 
+    private Long userId; 
+    private Integer rating;
 
     @Column(columnDefinition = "TEXT")
-    private String comment; // Task 3.1
+    private String comment;
 
-    private LocalDateTime createdAt; // Task 3.1
+    private LocalDateTime createdAt; 
 
     @PrePersist
     protected void onCreate() {
