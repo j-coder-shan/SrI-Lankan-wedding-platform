@@ -10,7 +10,7 @@ services:
     image: mysql:8.0
     container_name: mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: password
     volumes:
       - ./mysql-init:/docker-entrypoint-initdb.d # This loads init script
       - mysql_data:/var/lib/mysql
