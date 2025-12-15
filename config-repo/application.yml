@@ -1,19 +1,14 @@
-server:
-  port: 8080 # Default fallback port
 
 spring:
-  application:
-    name: wedding-platform
+
   http:
     encoding:
       charset: UTF-8
       enabled: true
       force: true
-  # Date format for JSON
   jackson:
     date-format: yyyy-MM-dd
-    serialization:
-      write-dates-as-timestamps: false
+    time-zone: UTC
 
 # Actuator (Health Checks)
 management:

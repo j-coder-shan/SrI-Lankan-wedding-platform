@@ -41,4 +41,59 @@ public class RevenueReport {
             transactionDate = LocalDate.now();
         }
     }
+
+    // Manual builder for Maven compilation
+    public static RevenueReportBuilder builder() {
+        return new RevenueReportBuilder();
+    }
+
+    public static class RevenueReportBuilder {
+        private Long invoiceId;
+        private Long vendorId;
+        private String vendorCategory;
+        private String district;
+        private BigDecimal amountEarned;
+        private LocalDate transactionDate;
+
+        public RevenueReportBuilder invoiceId(Long invoiceId) {
+            this.invoiceId = invoiceId;
+            return this;
+        }
+
+        public RevenueReportBuilder vendorId(Long vendorId) {
+            this.vendorId = vendorId;
+            return this;
+        }
+
+        public RevenueReportBuilder vendorCategory(String vendorCategory) {
+            this.vendorCategory = vendorCategory;
+            return this;
+        }
+
+        public RevenueReportBuilder district(String district) {
+            this.district = district;
+            return this;
+        }
+
+        public RevenueReportBuilder amountEarned(BigDecimal amountEarned) {
+            this.amountEarned = amountEarned;
+            return this;
+        }
+
+        public RevenueReportBuilder transactionDate(LocalDate transactionDate) {
+            this.transactionDate = transactionDate;
+            return this;
+        }
+
+        public RevenueReport build() {
+            RevenueReport report = new RevenueReport();
+            report.invoiceId = this.invoiceId;
+            report.vendorId = this.vendorId;
+            report.vendorCategory = this.vendorCategory;
+            report.district = this.district;
+            report.amountEarned = this.amountEarned;
+            report.transactionDate = this.transactionDate;
+            return report;
+        }
+    }
 }

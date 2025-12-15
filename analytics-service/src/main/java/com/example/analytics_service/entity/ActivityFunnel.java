@@ -1,7 +1,10 @@
 package com.example.analytics_service.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -20,14 +23,12 @@ public class ActivityFunnel {
     private Long vendorId;
     private Long userId;
 
-    private String actionType;
+    private String actionType; // VIEW_LISTING, SEND_ENQUIRY, BOOK, etc.
 
-    private LocalDateTime timestamp;
-
-    private String userAgeGroup;
+    private LocalDateTime recordedAt;
 
     @PrePersist
     protected void onCreate() {
-        timestamp = LocalDateTime.now();
+        recordedAt = LocalDateTime.now();
     }
 }

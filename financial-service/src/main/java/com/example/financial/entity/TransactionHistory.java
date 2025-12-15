@@ -2,37 +2,32 @@ package com.example.financial.entity;
 
 import com.example.financial.enums.PaymentMethod;
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transaction_history")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class TransactionHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invoice_id", nullable = false)
-    private CommissionInvoice invoice;
+    public CommissionInvoice invoice;
 
     @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal amount;
+    public BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    private PaymentMethod method;
+    public PaymentMethod method;
 
     @Column(name = "reference_no")
-    private String referenceNo;
+    public String referenceNo;
 
-    private LocalDateTime timestamp;
+    public LocalDateTime timestamp;
 
     @PrePersist
     protected void onCreate() {
