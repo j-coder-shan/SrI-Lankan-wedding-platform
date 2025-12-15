@@ -11,18 +11,19 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/ws/**").permitAll() // Allow WebSocket endpoint
-                        .requestMatchers("/actuator/**").permitAll()
-                        .anyRequest().authenticated()
-                );
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/ws/**").permitAll() // Allow WebSocket endpoint
+                                                .requestMatchers("/api/chat/**").permitAll() // Allow chat API for
+                                                                                             // testing
+                                                .requestMatchers("/actuator/**").permitAll()
+                                                .anyRequest().authenticated());
 
-        return http.build();
-    }
+                return http.build();
+        }
 }
