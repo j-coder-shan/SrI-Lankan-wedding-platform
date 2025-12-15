@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -82,6 +83,7 @@ public class AuthenticationService {
                 }).orElseThrow(() -> new RuntimeException("Refresh token is not in database!"));
     }
 
+    @Transactional
     private RefreshToken createRefreshToken(User user) {
         // Delete old token if exists
         refreshTokenRepository.deleteByUser(user);

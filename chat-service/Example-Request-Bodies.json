@@ -1,0 +1,60 @@
+{
+    "description": "Example JSON Request Bodies for Chat Service",
+    "chatMessageDTO": {
+        "description": "Used for WebSocket messaging (not REST API)",
+        "example": {
+            "conversationId": "65a1234567890abcdef12345",
+            "content": "Hello! I'm interested in booking your venue for my wedding."
+        }
+    },
+    "conversationDTO_Response": {
+        "description": "Example response when getting conversations",
+        "example": {
+            "id": "65a1234567890abcdef12345",
+            "enquiryId": 1,
+            "coupleId": 101,
+            "coupleName": "John and Jane",
+            "vendorId": 201,
+            "vendorName": "Dream Venue",
+            "unreadCount": 3,
+            "lastMessageTime": "2025-12-14T04:00:00",
+            "createdAt": "2025-12-13T10:00:00"
+        }
+    },
+    "messageResponseDTO_Response": {
+        "description": "Example response for message history",
+        "example": {
+            "content": [
+                {
+                    "id": "65a9876543210fedcba09876",
+                    "conversationId": "65a1234567890abcdef12345",
+                    "senderId": 101,
+                    "content": "Hello! I'm interested in booking your venue.",
+                    "timestamp": "2025-12-14T03:00:00",
+                    "status": "DELIVERED"
+                },
+                {
+                    "id": "65a9876543210fedcba09877",
+                    "conversationId": "65a1234567890abcdef12345",
+                    "senderId": 201,
+                    "content": "Thank you for your interest! What date are you looking for?",
+                    "timestamp": "2025-12-14T03:05:00",
+                    "status": "READ"
+                }
+            ],
+            "pageable": {
+                "pageNumber": 0,
+                "pageSize": 50
+            },
+            "totalPages": 1,
+            "totalElements": 2,
+            "last": true,
+            "first": true
+        }
+    },
+    "notes": {
+        "currentEndpoints": "Your current Chat Service endpoints use query parameters and headers, not JSON request bodies",
+        "postEndpoint": "The POST /api/chat/read/{conversationId} endpoint doesn't require a JSON body",
+        "websocketMessaging": "Actual chat messages are sent via WebSocket, not HTTP POST"
+    }
+}

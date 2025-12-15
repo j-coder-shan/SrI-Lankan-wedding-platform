@@ -3,6 +3,7 @@ package com.wedding.chat_service.controller;
 import com.wedding.chat_service.entity.Conversation;
 import com.wedding.chat_service.dto.ConversationDTO;
 import com.wedding.chat_service.dto.MessageResponseDTO;
+import com.wedding.chat_service.dto.StartConversationRequest;
 import com.wedding.chat_service.service.ChatService;
 import com.wedding.chat_service.service.ConversationService;
 import lombok.RequiredArgsConstructor;
@@ -24,18 +25,17 @@ public class ConversationController {
 
     /**
      * Start or get conversation for an enquiry
-     * GET /api/chat/start/{enquiryId}
+     * POST /api/chat/start
      */
-    @GetMapping("/start/{enquiryId}")
-    public ResponseEntity<String> startConversation(
-            @PathVariable Long enquiryId,
-            @RequestParam Long coupleId,
-            @RequestParam String coupleName,
-            @RequestParam Long vendorId,
-            @RequestParam String vendorName) {
+    @PostMapping("/start")
+    public ResponseEntity<String> startConversation(@RequestBody StartConversationRequest request) {
 
         Conversation conversation = conversationService.getOrCreateConversation(
-                enquiryId, coupleId, coupleName, vendorId, vendorName);
+                request.getEnquiryId(),
+                request.getCoupleId(),
+                request.getCoupleName(),
+                request.getVendorId(),
+                request.getVendorName());
 
         return ResponseEntity.ok(conversation.getId());
     }

@@ -7,7 +7,7 @@ import com.example.financial.enums.InvoiceStatus;
 import com.example.financial.repository.InvoiceRepository;
 import com.example.financial.service.FinancialService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +15,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/financial")
-@RequiredArgsConstructor
 public class FinancialController {
 
-    private final FinancialService financialService;
-    private final InvoiceRepository invoiceRepository;
+    @Autowired
+    private FinancialService financialService;
+    @Autowired
+    private InvoiceRepository invoiceRepository;
 
     @PostMapping("/invoices")
     public ResponseEntity<CommissionInvoice> createInvoice(@Valid @RequestBody InvoiceCreationRequest request) {
@@ -48,8 +49,8 @@ public class FinancialController {
     public ResponseEntity<CommissionInvoice> payInvoice(
             @PathVariable Long id,
             @Valid @RequestBody PaymentRequest request) {
-        CommissionInvoice updatedInvoice = financialService.processPayment(id, request.getMethod(),
-                request.getReferenceNo());
+        CommissionInvoice updatedInvoice = financialService.processPayment(id, request.method,
+                request.referenceNo);
         return ResponseEntity.ok(updatedInvoice);
     }
 
