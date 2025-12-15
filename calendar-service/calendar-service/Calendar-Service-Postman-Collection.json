@@ -1,0 +1,536 @@
+{
+	"info": {
+		"name": "Calendar Service API",
+		"description": "Complete testing collection for Sri Lankan Wedding Platform - Calendar Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Availability Checks",
+			"item": [
+				{
+					"name": "Check Available Morning Slot",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/check?vendorId=201&date=2025-12-25&slot=MORNING",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "check"],
+							"query": [
+								{
+									"key": "vendorId",
+									"value": "201",
+									"description": "Vendor ID"
+								},
+								{
+									"key": "date",
+									"value": "2025-12-25",
+									"description": "Date in YYYY-MM-DD format"
+								},
+								{
+									"key": "slot",
+									"value": "MORNING",
+									"description": "MORNING, EVENING, or FULL_DAY"
+								}
+							]
+						},
+						"description": "Check if morning slot is available for vendor on specific date. Should return true if available."
+					},
+					"response": []
+				},
+				{
+					"name": "Check Available Evening Slot",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/check?vendorId=201&date=2025-12-25&slot=EVENING",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "check"],
+							"query": [
+								{
+									"key": "vendorId",
+									"value": "201",
+									"description": "Vendor ID"
+								},
+								{
+									"key": "date",
+									"value": "2025-12-25",
+									"description": "Date in YYYY-MM-DD format"
+								},
+								{
+									"key": "slot",
+									"value": "EVENING",
+									"description": "MORNING, EVENING, or FULL_DAY"
+								}
+							]
+						},
+						"description": "Check if evening slot is available for vendor on specific date."
+					},
+					"response": []
+				},
+				{
+					"name": "Check Available Full Day",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/check?vendorId=201&date=2025-12-26&slot=FULL_DAY",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "check"],
+							"query": [
+								{
+									"key": "vendorId",
+									"value": "201",
+									"description": "Vendor ID"
+								},
+								{
+									"key": "date",
+									"value": "2025-12-26",
+									"description": "Date in YYYY-MM-DD format"
+								},
+								{
+									"key": "slot",
+									"value": "FULL_DAY",
+									"description": "MORNING, EVENING, or FULL_DAY"
+								}
+							]
+						},
+						"description": "Check if full day is available. Returns true only if NO events exist on that date."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Register Bookings",
+			"item": [
+				{
+					"name": "Register Morning Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendorId\": 201,\n  \"enquiryId\": 1001,\n  \"date\": \"2025-12-25\",\n  \"timeSlot\": \"MORNING\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/register-booking",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "register-booking"]
+						},
+						"description": "Register a confirmed booking for morning slot. Called by Enquiry Service after payment confirmation."
+					},
+					"response": []
+				},
+				{
+					"name": "Register Evening Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendorId\": 202,\n  \"enquiryId\": 1002,\n  \"date\": \"2025-12-25\",\n  \"timeSlot\": \"EVENING\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/register-booking",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "register-booking"]
+						},
+						"description": "Register an evening slot booking for a different vendor."
+					},
+					"response": []
+				},
+				{
+					"name": "Register Full Day Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendorId\": 203,\n  \"enquiryId\": 1003,\n  \"date\": \"2025-12-28\",\n  \"timeSlot\": \"FULL_DAY\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/register-booking",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "register-booking"]
+						},
+						"description": "Register a full day booking. This blocks both morning and evening slots."
+					},
+					"response": []
+				},
+				{
+					"name": "Double Booking Attempt (Should Fail)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendorId\": 201,\n  \"enquiryId\": 1004,\n  \"date\": \"2025-12-25\",\n  \"timeSlot\": \"MORNING\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/register-booking",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "register-booking"]
+						},
+						"description": "Attempt to book the same slot twice. Should fail with error: Date already booked."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Block Dates",
+			"item": [
+				{
+					"name": "Block Full Day (Holiday)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendorId\": 201,\n  \"date\": \"2025-12-31\",\n  \"timeSlot\": \"FULL_DAY\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/block",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "block"]
+						},
+						"description": "Vendor blocks entire day (holiday/maintenance). No enquiryId needed."
+					},
+					"response": []
+				},
+				{
+					"name": "Block Morning Slot",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendorId\": 201,\n  \"date\": \"2025-12-30\",\n  \"timeSlot\": \"MORNING\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/block",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "block"]
+						},
+						"description": "Vendor blocks only morning slot. Evening remains available."
+					},
+					"response": []
+				},
+				{
+					"name": "Block Evening Slot",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendorId\": 202,\n  \"date\": \"2025-12-30\",\n  \"timeSlot\": \"EVENING\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/block",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "block"]
+						},
+						"description": "Vendor blocks evening slot only."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Conflict Tests",
+			"item": [
+				{
+					"name": "Check Morning After Booking",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/check?vendorId=201&date=2025-12-25&slot=MORNING",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "check"],
+							"query": [
+								{
+									"key": "vendorId",
+									"value": "201"
+								},
+								{
+									"key": "date",
+									"value": "2025-12-25"
+								},
+								{
+									"key": "slot",
+									"value": "MORNING"
+								}
+							]
+						},
+						"description": "After booking morning slot, this should return false."
+					},
+					"response": []
+				},
+				{
+					"name": "Check Evening After Morning Booking",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/check?vendorId=201&date=2025-12-25&slot=EVENING",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "check"],
+							"query": [
+								{
+									"key": "vendorId",
+									"value": "201"
+								},
+								{
+									"key": "date",
+									"value": "2025-12-25"
+								},
+								{
+									"key": "slot",
+									"value": "EVENING"
+								}
+							]
+						},
+						"description": "Even after morning booking, evening should still be available (returns true)."
+					},
+					"response": []
+				},
+				{
+					"name": "Check Full Day After Partial Booking",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/check?vendorId=201&date=2025-12-25&slot=FULL_DAY",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "check"],
+							"query": [
+								{
+									"key": "vendorId",
+									"value": "201"
+								},
+								{
+									"key": "date",
+									"value": "2025-12-25"
+								},
+								{
+									"key": "slot",
+									"value": "FULL_DAY"
+								}
+							]
+						},
+						"description": "If any slot is booked, FULL_DAY should return false."
+					},
+					"response": []
+				},
+				{
+					"name": "Check Morning When Full Day Blocked",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/check?vendorId=201&date=2025-12-31&slot=MORNING",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "check"],
+							"query": [
+								{
+									"key": "vendorId",
+									"value": "201"
+								},
+								{
+									"key": "date",
+									"value": "2025-12-31"
+								},
+								{
+									"key": "slot",
+									"value": "MORNING"
+								}
+							]
+						},
+						"description": "If FULL_DAY is blocked, all individual slots should return false."
+					},
+					"response": []
+				},
+				{
+					"name": "Check Evening When Full Day Blocked",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/check?vendorId=201&date=2025-12-31&slot=EVENING",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "check"],
+							"query": [
+								{
+									"key": "vendorId",
+									"value": "201"
+								},
+								{
+									"key": "date",
+									"value": "2025-12-31"
+								},
+								{
+									"key": "slot",
+									"value": "EVENING"
+								}
+							]
+						},
+						"description": "If FULL_DAY is blocked, evening should also return false."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Multi-Vendor Tests",
+			"item": [
+				{
+					"name": "Book Same Date - Different Vendor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"vendorId\": 204,\n  \"enquiryId\": 1005,\n  \"date\": \"2025-12-25\",\n  \"timeSlot\": \"MORNING\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/register-booking",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "register-booking"]
+						},
+						"description": "Different vendors can book same date/slot. Should succeed."
+					},
+					"response": []
+				},
+				{
+					"name": "Check Vendor 204 Availability",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/calendar/check?vendorId=204&date=2025-12-25&slot=MORNING",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "calendar", "check"],
+							"query": [
+								{
+									"key": "vendorId",
+									"value": "204"
+								},
+								{
+									"key": "date",
+									"value": "2025-12-25"
+								},
+								{
+									"key": "slot",
+									"value": "MORNING"
+								}
+							]
+						},
+						"description": "After booking, vendor 204's morning slot should be unavailable."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/actuator/health",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8082",
+					"path": ["actuator", "health"]
+				},
+				"description": "Verify Calendar Service is up and database connection is healthy."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8082",
+			"type": "string"
+		}
+	]
+}
