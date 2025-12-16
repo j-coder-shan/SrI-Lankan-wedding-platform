@@ -41,6 +41,9 @@ public class ListingServiceImpl implements ListingService {
         newListing.setStatus(ListingStatus.PENDING); // Default status: PENDING
 
         listingRepository.save(newListing);
+
+        // Publish to Kafka regardless of status
+        publishListingEvent(newListing, "CREATE");
     }
 
     // NOTE: Update logic is complex due to inheritance; simplified for presentation
@@ -68,10 +71,8 @@ public class ListingServiceImpl implements ListingService {
 
         listingRepository.save(updatedListing);
 
-        // Trigger Kafka if status is PUBLISHED
-        if (updatedListing.getStatus() == ListingStatus.PUBLISHED) {
-            publishListingEvent(updatedListing);
-        }
+        // Publish to Kafka regardless of status
+        publishListingEvent(updatedListing, "UPDATE");
     }
 
     @Override
@@ -84,23 +85,37 @@ public class ListingServiceImpl implements ListingService {
         listing.setAvgRating(newAvgRating); // Update avgRating
         listingRepository.save(listing);
 
-        // Trigger Kafka update to sync Search Service (Task 3.2/2.2)
-        if (listing.getStatus() == ListingStatus.PUBLISHED) {
-            publishListingEvent(listing);
-        }
+        // Publish to Kafka regardless of status
+        publishListingEvent(listing, "UPDATE");
     }
 
     // ... Implement getListingById and getVendorListings using ListingMapper ...
 
     // Helper method for Kafka Publishing (Task 2.2)
-    private void publishListingEvent(Listing listing) {
-        ListingEvent event = new ListingEvent(
-                listing.getId(),
-                listing.getTitle(),
-                listing.getPriceMin(),
-                listing.getDistrict(),
-                listing.getStatus());
-        kafkaTemplate.send(KafkaTopicConfig.LISTING_TOPIC, event); // Publish only if PUBLISHED
+    private void publishListingEvent(Listing listing, String operation) {
+        ListingEvent event = new ListingEvent();
+        event.setId(listing.getId());
+        event.setTitle(listing.getTitle());
+        event.setDescription(listing.getDescription());
+        event.setCategory(listing.getCategory());
+        event.setPriceMin(listing.getPriceMin());
+        event.setPriceMax(listing.getPriceMax());
+        event.setDistrict(listing.getDistrict());
+        event.setStatus(listing.getStatus() != null ? listing.getStatus().toString() : "PENDING");
+        event.setAvgRating(listing.getAvgRating());
+        event.setOperation(operation); // CREATE, UPDATE, DELETE
+
+        // Get main image URL if images exist
+        if (listing.getImages() != null && !listing.getImages().isEmpty()) {
+            event.setMainImageUrl(listing.getImages().get(0).getUrl());
+        }
+
+        // Note: lat/lon would be extracted from listing if available
+        // For now, they'll be null unless you add location fields to Listing entity
+
+        kafkaTemplate.send(KafkaTopicConfig.LISTING_TOPIC, event);
+        System.out.println("📨 Published Kafka event: " + operation + " - Listing ID: " + listing.getId() + " (Status: "
+                + listing.getStatus() + ")");
     }
 
     // Placeholder for other interface methods
