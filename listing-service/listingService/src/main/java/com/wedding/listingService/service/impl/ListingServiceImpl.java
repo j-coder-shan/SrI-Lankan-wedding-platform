@@ -38,13 +38,12 @@ public class ListingServiceImpl implements ListingService {
     public void createListing(ListingRequestDTO requestDTO, Long vendorId) {
         Listing newListing = listingFactory.createListing(requestDTO);
         newListing.setVendorId(vendorId);
-        newListing.setStatus(ListingStatus.PENDING); // Default status: PENDING
+        newListing.setStatus(ListingStatus.PENDING); 
 
         listingRepository.save(newListing);
     }
 
-    // NOTE: Update logic is complex due to inheritance; simplified for presentation
-    // focus.
+  
     @Override
     @Transactional
     public void updateListing(Long listingId, ListingRequestDTO requestDTO, Long vendorId) {
@@ -52,23 +51,17 @@ public class ListingServiceImpl implements ListingService {
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found with ID: " + listingId));
 
         if (!existingListing.getVendorId().equals(vendorId)) {
-            // Throw UnauthorizedAccess or similar exception
-            throw new RuntimeException("Unauthorized update attempt."); // Task 1.2: Ensure only owner can update
+            throw new RuntimeException("Unauthorized update attempt."); 
         }
 
-        // Logic to delete the old subclass entity and save the new one if category
-        // changed is omitted
-        // here for simplicity, but the Factory is ready to create the new entity.
-        // For simple updates, map fields and save.
 
         Listing updatedListing = listingFactory.createListing(requestDTO);
         updatedListing.setId(listingId);
-        updatedListing.setVendorId(vendorId); // Keep existing ID and vendorId
-        updatedListing.setStatus(existingListing.getStatus()); // Keep existing status
+        updatedListing.setVendorId(vendorId); 
+        updatedListing.setStatus(existingListing.getStatus()); 
 
         listingRepository.save(updatedListing);
 
-        // Trigger Kafka if status is PUBLISHED
         if (updatedListing.getStatus() == ListingStatus.PUBLISHED) {
             publishListingEvent(updatedListing);
         }
@@ -77,22 +70,18 @@ public class ListingServiceImpl implements ListingService {
     @Override
     @Transactional
     public void updateListingRating(Long listingId, Double newAvgRating) {
-        // Task 3.2: Internal endpoint used by Review Service
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found"));
 
-        listing.setAvgRating(newAvgRating); // Update avgRating
+        listing.setAvgRating(newAvgRating); 
         listingRepository.save(listing);
 
-        // Trigger Kafka update to sync Search Service (Task 3.2/2.2)
         if (listing.getStatus() == ListingStatus.PUBLISHED) {
             publishListingEvent(listing);
         }
     }
 
-    // ... Implement getListingById and getVendorListings using ListingMapper ...
-
-    // Helper method for Kafka Publishing (Task 2.2)
+  
     private void publishListingEvent(Listing listing) {
         ListingEvent event = new ListingEvent(
                 listing.getId(),
@@ -100,10 +89,9 @@ public class ListingServiceImpl implements ListingService {
                 listing.getPriceMin(),
                 listing.getDistrict(),
                 listing.getStatus());
-        kafkaTemplate.send(KafkaTopicConfig.LISTING_TOPIC, event); // Publish only if PUBLISHED
+        kafkaTemplate.send(KafkaTopicConfig.LISTING_TOPIC, event); 
     }
 
-    // Placeholder for other interface methods
     @Override
     public ListingResponseDTO getListingById(Long listingId) {
         Listing listing = listingRepository.findById(listingId)

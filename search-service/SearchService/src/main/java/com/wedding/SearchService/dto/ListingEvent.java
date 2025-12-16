@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// Note: This DTO must match the DTO produced by the Listing Service
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

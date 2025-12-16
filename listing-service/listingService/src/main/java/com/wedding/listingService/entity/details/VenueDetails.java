@@ -1,4 +1,4 @@
-// VenueDetails.java
+
 package com.wedding.listingService.entity.details;
 
 import com.wedding.listingService.entity.Listing;

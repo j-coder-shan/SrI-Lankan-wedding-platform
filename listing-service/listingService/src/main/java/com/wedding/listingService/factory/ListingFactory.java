@@ -18,7 +18,6 @@ public class ListingFactory {
         try {
             String category = dto.getCategory().toUpperCase();
             
-            // 1. Determine the target Class
             Class<? extends Listing> targetClass;
             switch (category) {
                 case "VENUE":
@@ -37,23 +36,18 @@ public class ListingFactory {
                     throw new IllegalArgumentException("Invalid listing category: " + dto.getCategory());
             }
 
-            // 2. Create JsonNode from the category-specific details (raw JSON string)
             JsonNode categoryDetailsNode = objectMapper.readTree(dto.getDetails());
             
-            // 3. Create a temporary JsonNode for common fields using the inner DTO class
             ListingRequestDTO.CommonFields commonFields = new ListingRequestDTO.CommonFields(
                 dto.getTitle(), dto.getDescription(), dto.getPriceMin(), dto.getPriceMax(),
                 dto.getDistrict(), dto.getCity(), category
             );
             JsonNode commonFieldsNode = objectMapper.valueToTree(commonFields);
             
-            // 4. Merge: Copy common fields into the details node
             ((ObjectNode) categoryDetailsNode).setAll((ObjectNode) commonFieldsNode);
             
-            // 5. Final Deserialization: Convert the merged JsonNode into the correct entity
             Listing listing = objectMapper.treeToValue(categoryDetailsNode, targetClass);
             
-            // 6. Add images
             listing.addImages(dto.getImageUrls());
 
             return listing;

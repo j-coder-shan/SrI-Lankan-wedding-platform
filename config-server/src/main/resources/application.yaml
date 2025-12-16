@@ -15,7 +15,7 @@ spring:
         native:
           # IMPORTANT: Update this path to match your actual folder location
           # Based on your screenshot, your path is:
-          search-locations: file:///C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/config-repo
+          search-locations: file:///c:/Users/HP/Desktop/FullStackWedding/SrI-Lankan-wedding-platform/config-repo
 
 eureka:
   client:

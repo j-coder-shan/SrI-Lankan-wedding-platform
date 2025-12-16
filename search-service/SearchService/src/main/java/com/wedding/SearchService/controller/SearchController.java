@@ -18,10 +18,7 @@ public class SearchController {
         this.mongoTemplate = mongoTemplate;
     }
 
-    /**
-     * Endpoint: GET /api/search (Task 2.4)
-     * Handles dynamic queries combining text, price, district, and geo-location.
-     */
+   
     @GetMapping
     public List<SearchListing> searchListings(
             @RequestParam(required = false) String keyword,
@@ -33,40 +30,31 @@ public class SearchController {
 
         Query query = new Query();
 
-        // 1. Text Search Criteria (using @TextIndexed fields)
         if (keyword != null && !keyword.isEmpty()) {
             query.addCriteria(Criteria.where("title").regex(keyword, "i") // Simple regex for partial match
                     .orOperator(Criteria.where("description").regex(keyword, "i")));
 
-            // Note: For a true text index search (Task 2.1), you would use:
-            // query.addCriteria(new Criteria().text(keyword));
+            
         }
 
-        // 2. Criteria.where("district").is(district) (Task 2.4)
         if (district != null) {
             query.addCriteria(Criteria.where("district").is(district.toUpperCase()));
         }
 
-        // 3. Criteria.where("priceMin").lte(userBudget) (Task 2.4)
         if (userBudget != null) {
             query.addCriteria(Criteria.where("priceMin").lte(userBudget));
         }
 
-        // 4. Geo Query: Criteria.where("location").near(Point).maxDistance(km) (Task 2.4)
         if (lat != null && lon != null) {
-            // MongoDB GeoJSON distance is typically in meters
             double maxDistanceMeters = maxDistanceKm * 1000;
 
-            // Point takes (longitude, latitude)
             Point center = new Point(lon, lat);
 
             query.addCriteria(Criteria.where("location").near(center).maxDistance(maxDistanceMeters));
         }
 
-        // Final Rule: Ensure only PUBLISHED listings are returned
         query.addCriteria(Criteria.where("status").is("PUBLISHED"));
 
-        // Add sorting (e.g., sort by distance or rating) if needed
 
         return mongoTemplate.find(query, SearchListing.class);
     }

@@ -19,7 +19,6 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public List<SearchListing> executeAdvancedSearch(Query query) {
-        // This is where the MongoTemplate performs the actual database lookup (Task 2.4).
         return mongoTemplate.find(query, SearchListing.class);
     }
 }

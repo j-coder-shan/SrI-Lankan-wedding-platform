@@ -17,7 +17,7 @@ public class Listing {
     private Long id;
 
     @Column(nullable = false)
-    private Long vendorId; // extracted from X-Auth-User-Id
+    private Long vendorId; 
 
     @Column(nullable = false)
     private String title;
@@ -31,14 +31,13 @@ public class Listing {
     private String city;
 
     @Column(nullable = false)
-    private String category; // Mapped from the Category enum string
+    private String category; 
 
     @Enumerated(EnumType.STRING)
-    private ListingStatus status = ListingStatus.PENDING; // Default status
+    private ListingStatus status = ListingStatus.PENDING; 
 
     private Double avgRating = 0.0;
 
-    // Task 1.3: Image Handling
     @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ListingImage> images = new ArrayList<>();
 
