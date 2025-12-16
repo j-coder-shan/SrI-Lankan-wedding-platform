@@ -11,7 +11,8 @@ spring:
  
   data:
     mongodb:
-      uri: mongodb+srv://ridmichamoda_db_user:5DXgQiZ2B8X463zs@cluster0.5b5etky.mongodb.net/wedease_search_db?retryWrites=true&w=majority
+      # Local development MongoDB to avoid Atlas TLS issues
+      uri: mongodb://127.0.0.1:27017/wedease_search_db
       auto-index-creation: true
 
   # --- KAFKA CONSUMER CONFIGURATION (Task 2.3) ---

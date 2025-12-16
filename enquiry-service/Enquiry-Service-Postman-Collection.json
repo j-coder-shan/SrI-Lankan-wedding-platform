@@ -1,0 +1,79 @@
+{
+  "info": {
+    "name": "Enquiry Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for Enquiry Service endpoints on localhost:8084"
+  },
+  "item": [
+    {
+      "name": "Create Enquiry",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "http://localhost:8084/api/enquiries",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8084",
+          "path": ["api", "enquiries"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"listingId\": 101,\n  \"vendorId\": 2001,\n  \"coupleId\": 3001,\n  \"eventDate\": \"2026-03-15\",\n  \"guestCount\": 150,\n  \"status\": \"PENDING\",\n  \"finalPrice\": 250000.00,\n  \"coupleNameSnapshot\": \"Amila & Nethmi\",\n  \"couplePhoneSnapshot\": \"+94 77 123 4567\",\n  \"listingTitleSnapshot\": \"Colombo Grand Ballroom Package\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Update Status (APPROVED)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "X-User-Id", "value": "2001" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "http://localhost:8084/api/enquiries/1/status?status=APPROVED",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8084",
+          "path": ["api", "enquiries", "1", "status"],
+          "query": [ { "key": "status", "value": "APPROVED" } ]
+        }
+      }
+    },
+    {
+      "name": "Vendor Enquiries (page 0 size 10)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-User-Id", "value": "2001" } ],
+        "url": {
+          "raw": "http://localhost:8084/api/enquiries/vendor/me?page=0&size=10",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8084",
+          "path": ["api", "enquiries", "vendor", "me"],
+          "query": [
+            { "key": "page", "value": "0" },
+            { "key": "size", "value": "10" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Couple Enquiries",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "X-User-Id", "value": "3001" } ],
+        "url": {
+          "raw": "http://localhost:8084/api/enquiries/couple/me",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8084",
+          "path": ["api", "enquiries", "couple", "me"]
+        }
+      }
+    }
+  ]
+}

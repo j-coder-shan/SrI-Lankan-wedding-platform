@@ -29,7 +29,7 @@
 					"path": [
 						"api",
 						"financial",
-						"invoices"
+									"raw": "{\n  \"enquiryId\": 1003,\n  \"vendorId\": 8,\n  \"listingId\": 410,\n  \"category\": \"VENUE\",\n  \"finalPrice\": 250000.00\n}"
 					]
 				},
 				"description": "Create a new commission invoice for a booking"
