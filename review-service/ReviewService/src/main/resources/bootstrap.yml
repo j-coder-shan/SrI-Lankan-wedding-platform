@@ -1,4 +1,3 @@
-# src/main/resources/bootstrap.yml
 
 spring:
   application:
