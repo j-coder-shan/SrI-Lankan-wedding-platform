@@ -5,10 +5,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
-/**
- * Simple MongoDB Connection Test
- * Run this to verify your MongoDB Atlas connection
- */
+
 public class MongoConnectionTest {
 
     public static void main(String[] args) {
@@ -20,14 +17,12 @@ public class MongoConnectionTest {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             MongoDatabase database = mongoClient.getDatabase("wedease_search_db");
 
-            // Try to get server info
             Document serverStatus = database.runCommand(new Document("ping", 1));
 
             System.out.println("✅ SUCCESS! Connected to MongoDB Atlas");
             System.out.println("Database: " + database.getName());
             System.out.println("Server response: " + serverStatus.toJson());
 
-            // List collections
             System.out.println("\nAvailable collections:");
             for (String collectionName : database.listCollectionNames()) {
                 System.out.println("  - " + collectionName);

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// Note: This DTO must match the DTO produced by the Listing Service
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,8 +17,8 @@ public class ListingEvent {
     private String district;
     private String status;
     private Double avgRating;
-    private Double lat; // Latitude
-    private Double lon; // Longitude
+    private Double lat; 
+    private Double lon; 
     private String mainImageUrl;
-    private String operation; // UPDATE, CREATE, DELETE - Crucial for consumer logic (Task 2.3)
+    private String operation; 
 }

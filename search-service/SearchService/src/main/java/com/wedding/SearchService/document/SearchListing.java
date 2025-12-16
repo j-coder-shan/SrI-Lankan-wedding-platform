@@ -1,10 +1,10 @@
 package com.wedding.SearchService.document;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint; // Task 2.1 Geospatial Field
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint; 
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
-import org.springframework.data.mongodb.core.index.GeoSpatialIndexed; // Task 2.1 Indexing
-import org.springframework.data.mongodb.core.index.TextIndexed; // Task 2.1 Text Indexing
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed; 
+import org.springframework.data.mongodb.core.index.TextIndexed; 
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
 
@@ -13,12 +13,12 @@ import lombok.Data;
 public class SearchListing {
 
     @Id
-    private Long id; // Use the same ID as the MySQL Listing
+    private Long id; 
 
-    @TextIndexed // Task 2.1: Annotate title for text search
+    @TextIndexed 
     private String title;
 
-    @TextIndexed // Task 2.1: Annotate description for text search
+    @TextIndexed 
     private String description;
 
     private String category;
@@ -27,13 +27,12 @@ public class SearchListing {
     private String district;
     private String city;
 
-    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE) // Task 2.1: 2D Sphere Indexing
+    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE) 
     private GeoJsonPoint location;
 
     private Double avgRating;
-    private String status; // PUBLISHED, PENDING, etc.
+    private String status; 
     public void setMainImageUrl(String mainImageUrl2) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'setMainImageUrl'");
     }
 }
