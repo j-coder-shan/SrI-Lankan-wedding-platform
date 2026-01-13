@@ -1,0 +1,82 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      # Global CORS (Allow Frontend Access)
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "http://localhost:3000"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+            max-age: 3600
+
+      # Routes
+      routes:
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/api/auth/**
+          filters:
+              StripPrefix=1
+        - id: listing-service
+          uri: lb://LISTING-SERVICE
+          predicates:
+            - Path=/api/listings/**
+          filters:
+            - name: CustomAuthFilter
+        - id: enquiry-service
+          uri: lb://ENQUIRY-SERVICE
+          predicates:
+            - Path=/api/enquiries/**
+          filters:
+            - name: CustomAuthFilter
+        - id: review-service
+          uri: lb://REVIEW-SERVICE
+          predicates:
+            - Path=/api/reviews/**
+          filters:
+            - name: CustomAuthFilter
+        - id: financial-service
+          uri: lb://FINANCIAL-SERVICE
+          predicates:
+            - Path=/api/financial/**
+          filters:
+            - name: CustomAuthFilter
+        - id: search-service
+          uri: lb://SEARCH-SERVICE
+          predicates:
+            - Path=/api/search/**
+          filters:
+            - StripPrefix=1
+        - id: calendar-service
+          uri: lb://CALENDAR-SERVICE
+          predicates:
+            - Path=/api/calendar/**
+          filters:
+            - name: CustomAuthFilter
+        - id: chat-service
+          uri: lb://CHAT-SERVICE
+          predicates:
+            - Path=/api/chat/**
+          filters:
+            - name: CustomAuthFilter
+        - id: analytics-service
+          uri: lb://ANALYTICS-SERVICE
+          predicates:
+            - Path=/api/analytics/**
+          filters:
+            - name: CustomAuthFilter
+        - id: notification-service
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/api/notify/**
+          filters:
+            - name: CustomAuthFilter
+
+# JWT Secret for Gateway Validation
+jwt:
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970

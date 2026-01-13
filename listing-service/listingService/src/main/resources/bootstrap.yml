@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: listingService  # <-- Identifies the service to Eureka and Config Server
+  cloud:
+    config:
+      uri: http://localhost:8888  # <-- Location of the central configuration service
+      fail-fast: true

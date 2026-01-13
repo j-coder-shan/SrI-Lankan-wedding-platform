@@ -1,0 +1,43 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: chat-service
+
+  data:
+    mongodb:
+      uri: mongodb://mongo-container:27017/chat_db
+      auto-index-creation: true
+
+  security:
+    user:
+      name: admin
+      password: admin
+
+jwt:
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://service-registry:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.wedding.chat: DEBUG
+    org.springframework.messaging: DEBUG
+    org.springframework.web.socket: DEBUG

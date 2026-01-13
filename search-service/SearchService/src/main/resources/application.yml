@@ -1,0 +1,27 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: SearchService
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
+  data:
+    mongodb:
+      uri: mongodb+srv://anukaakshana_db_user:g1uVvC7vn8eex0zx@cluster0.bbzli6b.mongodb.net/wedease_search_db?retryWrites=true&w=majority
+      auto-index-creation: true
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: search-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        "[spring.json.trusted.packages]": "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
