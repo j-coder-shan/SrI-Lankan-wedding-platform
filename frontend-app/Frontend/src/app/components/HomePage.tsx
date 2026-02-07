@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { CategoryCard } from './CategoryCard';
 import { FeaturedVendors } from './FeaturedVendors';
-import { Category } from '../App';
+import { Category } from '../types';
 
 interface HomePageProps {
   onCategorySelect: (category: Category) => void;
@@ -36,7 +36,7 @@ export function HomePage({ onCategorySelect }: HomePageProps) {
               <Button
                 variant="outline"
                 className="border-rose-500 text-rose-500 hover:bg-rose-50"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/vendor/login')}
               >
                 Vendor Login
               </Button>
@@ -149,7 +149,7 @@ export function HomePage({ onCategorySelect }: HomePageProps) {
               <ul className="space-y-2 text-gray-400">
                 <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-white transition-colors" onClick={(e) => { e.preventDefault(); navigate('/add-ad'); }}>Become a Vendor</a></li>
+                <li><a href="#" className="hover:text-white transition-colors" onClick={(e) => { e.preventDefault(); navigate('/vendor/signup'); }}>Become a Vendor</a></li>
               </ul>
             </div>
             <div>
