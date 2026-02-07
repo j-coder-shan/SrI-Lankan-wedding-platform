@@ -9,7 +9,8 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb+srv://anukaakshana_db_user:g1uVvC7vn8eex0zx@cluster0.bbzli6b.mongodb.net/wedease_search_db?retryWrites=true&w=majority
+      # Local development MongoDB to avoid Atlas TLS issues
+      uri: mongodb://127.0.0.1:27017/wedease_search_db
       auto-index-creation: true
 
   kafka:
