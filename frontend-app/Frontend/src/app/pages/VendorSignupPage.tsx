@@ -16,48 +16,49 @@ export default function VendorSignupPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl w-full bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row-reverse">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 via-white to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl w-full bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-rose-100/50 overflow-hidden flex flex-col md:flex-row-reverse shadow-rose-100/50">
 
                 {/* Right Side - Image/Branding */}
                 <div className="w-full md:w-1/2 bg-cover bg-center h-64 md:h-auto relative" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1522413452208-996ff3f3e740?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')" }}>
-                    <div className="absolute inset-0 bg-gradient-to-bl from-purple-700/80 to-rose-600/80"></div>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8 text-center">
-                        <h2 className="text-3xl font-bold mb-2">Partner With Us</h2>
-                        <p className="text-rose-100">Reach thousands of couples and grow your wedding business.</p>
+                    <div className="absolute inset-0 bg-gradient-to-bl from-purple-700/80 to-rose-600/80 mix-blend-multiply"></div>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-12 text-center">
+                        <h2 className="text-4xl font-bold mb-4 drop-shadow-sm">Partner With Us</h2>
+                        <p className="text-rose-50 text-lg font-light">Reach thousands of couples and grow your wedding business.</p>
                     </div>
                 </div>
 
                 {/* Left Side - Signup Form */}
                 <div className="w-full md:w-1/2 p-8 md:p-12">
                     {/* Role Switcher */}
-                    <div className="flex bg-gray-100 p-1 rounded-lg mb-8">
-                        <Link to="/signup" className="w-1/2 text-center py-2 rounded-md hover:bg-white/50 text-sm font-medium text-gray-500 transition-all">
+                    <div className="flex bg-rose-50 p-1 rounded-full mb-8 border border-rose-100">
+                        <Link to="/signup" className="w-1/2 text-center py-2 rounded-full hover:bg-white/50 text-sm font-medium text-gray-500 transition-all hover:text-rose-500">
                             For Couples
                         </Link>
-                        <div className="w-1/2 text-center py-2 rounded-md bg-white shadow text-sm font-medium text-rose-600 cursor-default">
+                        <div className="w-1/2 text-center py-2 rounded-full bg-white shadow-sm text-sm font-semibold text-rose-600 cursor-default ring-1 ring-black/5">
                             For Vendors
                         </div>
                     </div>
 
                     <div className="text-center mb-8">
                         <h3 className="text-2xl font-bold text-gray-900">Vendor Registration</h3>
-                        <p className="text-gray-500 text-sm">Create your business account</p>
+                        <p className="text-gray-500 text-sm mt-2">Create your business account</p>
                     </div>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="fullName">Business/Contact Name</Label>
+                            <Label htmlFor="fullName" className="text-gray-700">Business/Contact Name</Label>
                             <Input
                                 id="fullName"
                                 {...register('fullName', { required: 'Name is required' })}
                                 placeholder="Business Name or Contact Person"
+                                className="border-rose-200 focus-visible:ring-rose-500/20"
                             />
-                            {errors.fullName && <span className="text-red-500 text-xs">{String(errors.fullName.message)}</span>}
+                            {errors.fullName && <span className="text-rose-500 text-xs font-medium">{String(errors.fullName.message)}</span>}
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="email">Business Email</Label>
+                            <Label htmlFor="email" className="text-gray-700">Business Email</Label>
                             <Input
                                 id="email"
                                 {...register('email', {
@@ -69,23 +70,25 @@ export default function VendorSignupPage() {
                                 })}
                                 type="email"
                                 placeholder="business@example.com"
+                                className="border-rose-200 focus-visible:ring-rose-500/20"
                             />
-                            {errors.email && <span className="text-red-500 text-xs">{String(errors.email.message)}</span>}
+                            {errors.email && <span className="text-rose-500 text-xs font-medium">{String(errors.email.message)}</span>}
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label htmlFor="password">Password</Label>
+                                <Label htmlFor="password" className="text-gray-700">Password</Label>
                                 <Input
                                     id="password"
                                     {...register('password', { required: 'Password is required', minLength: { value: 6, message: 'Min 6 chars' } })}
                                     type="password"
                                     placeholder="••••••••"
+                                    className="border-rose-200 focus-visible:ring-rose-500/20"
                                 />
-                                {errors.password && <span className="text-red-500 text-xs">{String(errors.password.message)}</span>}
+                                {errors.password && <span className="text-rose-500 text-xs font-medium">{String(errors.password.message)}</span>}
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                                <Label htmlFor="confirmPassword" className="text-gray-700">Confirm Password</Label>
                                 <Input
                                     id="confirmPassword"
                                     {...register('confirmPassword', {
@@ -94,14 +97,15 @@ export default function VendorSignupPage() {
                                     })}
                                     type="password"
                                     placeholder="••••••••"
+                                    className="border-rose-200 focus-visible:ring-rose-500/20"
                                 />
-                                {errors.confirmPassword && <span className="text-red-500 text-xs">{String(errors.confirmPassword.message)}</span>}
+                                {errors.confirmPassword && <span className="text-rose-500 text-xs font-medium">{String(errors.confirmPassword.message)}</span>}
                             </div>
                         </div>
 
                         <Button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-purple-600 to-rose-500 hover:from-purple-700 hover:to-rose-600 text-white mt-2"
+                            className="w-full bg-gradient-to-r from-purple-600 to-rose-500 hover:from-purple-700 hover:to-rose-600 text-white mt-4 shadow-lg shadow-rose-500/30 transition-all hover:shadow-rose-500/40"
                         >
                             Register Business
                         </Button>
@@ -110,7 +114,7 @@ export default function VendorSignupPage() {
                     <div className="mt-8 text-center">
                         <p className="text-sm text-gray-600">
                             Already registered?{' '}
-                            <Link to="/vendor/login" className="font-medium text-purple-600 hover:text-purple-500 transition-colors">
+                            <Link to="/vendor/login" className="font-semibold text-purple-600 hover:text-purple-700 transition-colors">
                                 Sign in
                             </Link>
                         </p>
