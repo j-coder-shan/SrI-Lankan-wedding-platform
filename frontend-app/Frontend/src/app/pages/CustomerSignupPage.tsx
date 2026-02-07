@@ -16,26 +16,26 @@ export default function CustomerSignupPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-rose-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl w-full bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-rose-100/50 overflow-hidden flex flex-col md:flex-row-reverse shadow-rose-100/50">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl w-full bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row-reverse">
 
                 {/* Right Side - Image/Branding */}
                 <div className="w-full md:w-1/2 bg-cover bg-center h-64 md:h-auto relative" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1511285560982-1351cdeb9821?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')" }}>
-                    <div className="absolute inset-0 bg-gradient-to-bl from-purple-600/80 to-rose-500/80 mix-blend-multiply"></div>
+                    <div className="absolute inset-0 bg-gradient-to-bl from-purple-600/80 to-rose-500/80"></div>
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-12 text-center">
                         <h2 className="text-4xl font-bold mb-4 drop-shadow-sm">Plan Your Big Day</h2>
-                        <p className="text-rose-50 text-lg font-light">Join thousands of couples planning their perfect wedding.</p>
+                        <p className="text-rose-100">Join thousands of couples planning their perfect wedding.</p>
                     </div>
                 </div>
 
                 {/* Left Side - Signup Form */}
                 <div className="w-full md:w-1/2 p-8 md:p-12">
                     {/* Role Switcher */}
-                    <div className="flex bg-rose-50 p-1 rounded-full mb-8 border border-rose-100">
-                        <div className="w-1/2 text-center py-2 rounded-full bg-white shadow-sm text-sm font-semibold text-rose-600 cursor-default ring-1 ring-black/5">
+                    <div className="flex bg-gray-100 p-1 rounded-lg mb-8">
+                        <div className="w-1/2 text-center py-2 rounded-md bg-white shadow-sm text-sm font-medium text-rose-600 cursor-default">
                             For Couples
                         </div>
-                        <Link to="/vendor/signup" className="w-1/2 text-center py-2 rounded-full hover:bg-white/50 text-sm font-medium text-gray-500 transition-all hover:text-rose-500">
+                        <Link to="/vendor/signup" className="w-1/2 text-center py-2 rounded-md hover:bg-white/50 text-sm font-medium text-gray-500 transition-all">
                             For Vendors
                         </Link>
                     </div>
@@ -47,18 +47,17 @@ export default function CustomerSignupPage() {
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="fullName" className="text-gray-700">Full Name</Label>
+                            <Label htmlFor="fullName">Full Name</Label>
                             <Input
                                 id="fullName"
                                 {...register('fullName', { required: 'Name is required' })}
                                 placeholder="John Doe"
-                                className="border-rose-200 focus-visible:ring-rose-500/20"
                             />
-                            {errors.fullName && <span className="text-rose-500 text-xs font-medium">{String(errors.fullName.message)}</span>}
+                            {errors.fullName && <span className="text-rose-500 text-xs">{String(errors.fullName.message)}</span>}
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="email" className="text-gray-700">Email Address</Label>
+                            <Label htmlFor="email">Email Address</Label>
                             <Input
                                 id="email"
                                 {...register('email', {
@@ -70,25 +69,23 @@ export default function CustomerSignupPage() {
                                 })}
                                 type="email"
                                 placeholder="you@example.com"
-                                className="border-rose-200 focus-visible:ring-rose-500/20"
                             />
-                            {errors.email && <span className="text-rose-500 text-xs font-medium">{String(errors.email.message)}</span>}
+                            {errors.email && <span className="text-rose-500 text-xs">{String(errors.email.message)}</span>}
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label htmlFor="password" className="text-gray-700">Password</Label>
+                                <Label htmlFor="password">Password</Label>
                                 <Input
                                     id="password"
                                     {...register('password', { required: 'Password is required', minLength: { value: 6, message: 'Min 6 chars' } })}
                                     type="password"
                                     placeholder="••••••••"
-                                    className="border-rose-200 focus-visible:ring-rose-500/20"
                                 />
-                                {errors.password && <span className="text-rose-500 text-xs font-medium">{String(errors.password.message)}</span>}
+                                {errors.password && <span className="text-rose-500 text-xs">{String(errors.password.message)}</span>}
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="confirmPassword" className="text-gray-700">Confirm Password</Label>
+                                <Label htmlFor="confirmPassword">Confirm Password</Label>
                                 <Input
                                     id="confirmPassword"
                                     {...register('confirmPassword', {
@@ -97,17 +94,14 @@ export default function CustomerSignupPage() {
                                     })}
                                     type="password"
                                     placeholder="••••••••"
-                                    className="border-rose-200 focus-visible:ring-rose-500/20"
                                 />
-                                {errors.confirmPassword && <span className="text-rose-500 text-xs font-medium">{String(errors.confirmPassword.message)}</span>}
+                                {errors.confirmPassword && <span className="text-rose-500 text-xs">{String(errors.confirmPassword.message)}</span>}
                             </div>
                         </div>
 
-                        {/* Hidden Role Input handled in onSubmit/Logic, UI removed */}
-
                         <Button
                             type="submit"
-                            className="w-full bg-gradient-to-r from-purple-600 to-rose-500 hover:from-purple-700 hover:to-rose-600 text-white mt-4 shadow-lg shadow-purple-500/30 transition-all hover:shadow-purple-500/40"
+                            className="w-full bg-rose-500 hover:bg-rose-600 text-white mt-4"
                         >
                             Sign Up
                         </Button>
@@ -116,7 +110,7 @@ export default function CustomerSignupPage() {
                     <div className="mt-8 text-center">
                         <p className="text-sm text-gray-600">
                             Already have an account?{' '}
-                            <Link to="/login" className="font-semibold text-purple-600 hover:text-purple-700 transition-colors">
+                            <Link to="/login" className="font-medium text-purple-600 hover:text-purple-500 transition-colors">
                                 Sign in
                             </Link>
                         </p>
