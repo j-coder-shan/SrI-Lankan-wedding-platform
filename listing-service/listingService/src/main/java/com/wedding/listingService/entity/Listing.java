@@ -31,13 +31,14 @@ public class Listing {
     private String city;
 
     @Column(nullable = false)
-    private String category; 
+    private String category; // Mapped from the Category enum string
 
     @Enumerated(EnumType.STRING)
-    private ListingStatus status = ListingStatus.PENDING; 
+    private ListingStatus status = ListingStatus.PENDING; // Default status
 
     private Double avgRating = 0.0;
 
+    // Task 1.3: Image Handling
     @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ListingImage> images = new ArrayList<>();
 

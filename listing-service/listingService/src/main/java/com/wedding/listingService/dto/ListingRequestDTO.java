@@ -19,12 +19,13 @@ public class ListingRequestDTO {
     private String city;
 
     @NotBlank(message = "Category is required")
-    private String category; 
+    private String category; // Used by the Factory
 
-    private String details; 
+    private String details; // Raw JSON details for category specifics
 
     private List<String> imageUrls;
 
+    // Inner class used by ListingFactory for merging common fields
     @Data
     @AllArgsConstructor
     @NoArgsConstructor

@@ -1,0 +1,43 @@
+server:
+  port: 8081 # Unique port for this microservice
+
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka # Connects to Eureka
+
+spring:
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      enabled: false
+  # --- DATABASE (MySQL) Configuration ---
+  datasource:
+    url: jdbc:mysql://localhost:3307/wedease_listing_db?createDatabaseIfNotExist=true
+    username: root
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  # --- JPA/Hibernate Configuration ---
+  jpa:
+    hibernate:
+      ddl-auto: update # Automatically creates/updates tables
+    show-sql: true
+  
+  # --- Kafka Producer Configuration (Task 2.2) ---
+  kafka:
+   
+    producer:
+      # This replaces the simplified spring.kafka.bootstrap-servers entry
+      bootstrap-servers: localhost:9092 
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+# Logging level setting (from your .properties file)
+logging:
+  level:
+    root: INFO
+
+    

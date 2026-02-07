@@ -1,0 +1,390 @@
+# Listing Service API Testing Manual
+
+Complete guide to test all endpoints of the Listing Service.
+
+---
+
+## 🔧 Prerequisites
+
+- ✅ Listing Service running on `http://localhost:8081`
+- ✅ MySQL database accessible on port `3307`
+- ✅ Eureka server running on `http://localhost:8761`
+
+---
+
+## 📋 Available Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/listings` | Create a new listing |
+| PUT | `/api/listings/{id}` | Update existing listing |
+| GET | `/api/listings/{id}` | Get listing details |
+| GET | `/api/listings/vendor/me` | Get all listings for a vendor |
+| PUT | `/api/listings/{id}/rating` | Update listing rating (internal) |
+
+---
+
+## 1️⃣ CREATE LISTING
+
+### **POST** `http://localhost:8081/api/listings`
+
+#### Headers
+```
+Content-Type: application/json
+X-Auth-User-Id: 1
+```
+
+---
+
+### A. Create VENUE Listing
+
+**Valid Fields:** `capacity`, `airConditioned`, `parkingAvailable`
+
+```json
+{
+  "category": "VENUE",
+  "title": "Grand Ballroom Colombo",
+  "description": "Luxurious wedding venue with modern amenities",
+  "priceMin": 100000,
+  "priceMax": 250000,
+  "district": "Colombo",
+  "city": "Colombo 07",
+  "imageUrls": ["https://example.com/venue1.jpg", "https://example.com/venue2.jpg"],
+  "details": "{\"capacity\": 300, \"airConditioned\": true, \"parkingAvailable\": true}"
+}
+```
+
+**Expected Response:** `201 Created` (empty body)
+
+---
+
+### B. Create PHOTOGRAPHER Listing
+
+**Valid Fields:** `droneAvailable`, `preShootIncluded`
+
+```json
+{
+  "category": "PHOTOGRAPHER",
+  "title": "Studio Capture Photography",
+  "description": "Professional wedding photography with cinematic videography",
+  "priceMin": 50000,
+  "priceMax": 150000,
+  "district": "Gampaha",
+  "city": "Negombo",
+  "imageUrls": ["https://example.com/photo1.jpg"],
+  "details": "{\"droneAvailable\": true, \"preShootIncluded\": true}"
+}
+```
+
+**Expected Response:** `201 Created`
+
+---
+
+### C. Create SALON Listing
+
+**Valid Fields:** `gender`, `services`
+
+```json
+{
+  "category": "SALON",
+  "title": "Bridal Elegance Salon",
+  "description": "Complete bridal makeup and hairstyling services",
+  "priceMin": 25000,
+  "priceMax": 75000,
+  "district": "Colombo",
+  "city": "Nugegoda",
+  "imageUrls": ["https://example.com/salon1.jpg"],
+  "details": "{\"gender\": \"BRIDAL\", \"services\": \"Makeup, Hairstyling, Saree Draping\"}"
+}
+```
+
+**Expected Response:** `201 Created`
+
+---
+
+### D. Create DRESS Listing
+
+**Valid Fields:** `materialType`
+
+```json
+{
+  "category": "DRESS",
+  "title": "Royal Kandyan Wedding Attire",
+  "description": "Traditional Kandyan bridal wear with authentic designs",
+  "priceMin": 30000,
+  "priceMax": 100000,
+  "district": "Kandy",
+  "city": "Kandy",
+  "imageUrls": ["https://example.com/dress1.jpg"],
+  "details": "{\"materialType\": \"KANDYAN\"}"
+}
+```
+
+**Expected Response:** `201 Created`
+
+---
+
+## 2️⃣ GET LISTING DETAILS
+
+### **GET** `http://localhost:8081/api/listings/{id}`
+
+#### Example: Get listing with ID 1
+
+**Request:**
+```
+GET http://localhost:8081/api/listings/1
+```
+
+**Headers:**
+```
+(No special headers required)
+```
+
+**Expected Response:** `200 OK`
+
+```json
+{
+  "id": 1,
+  "vendorId": 1,
+  "title": "Grand Ballroom Colombo",
+  "description": "Luxurious wedding venue with modern amenities",
+  "priceMin": 100000.0,
+  "priceMax": 250000.0,
+  "district": "Colombo",
+  "city": "Colombo 07",
+  "category": "VENUE",
+  "status": "PENDING",
+  "avgRating": null,
+  "imageUrls": ["https://example.com/venue1.jpg", "https://example.com/venue2.jpg"],
+  "createdAt": "2025-12-15T23:18:00",
+  "updatedAt": "2025-12-15T23:18:00"
+}
+```
+
+**Error Response (404):**
+```json
+{
+  "timestamp": "2025-12-15T23:18:00",
+  "status": 404,
+  "error": "Listing not found with ID: 99"
+}
+```
+
+---
+
+## 3️⃣ GET VENDOR'S LISTINGS
+
+### **GET** `http://localhost:8081/api/listings/vendor/me`
+
+Retrieves all listings owned by the authenticated vendor.
+
+#### Headers
+```
+X-Auth-User-Id: 1
+```
+
+**Request:**
+```
+GET http://localhost:8081/api/listings/vendor/me
+```
+
+**Expected Response:** `200 OK`
+
+```json
+[
+  {
+    "id": 1,
+    "vendorId": 1,
+    "title": "Grand Ballroom Colombo",
+    "category": "VENUE",
+    "status": "PENDING",
+    ...
+  },
+  {
+    "id": 2,
+    "vendorId": 1,
+    "title": "Studio Capture Photography",
+    "category": "PHOTOGRAPHER",
+    "status": "PENDING",
+    ...
+  }
+]
+```
+
+**Empty Response (if no listings):**
+```json
+[]
+```
+
+---
+
+## 4️⃣ UPDATE LISTING
+
+### **PUT** `http://localhost:8081/api/listings/{id}`
+
+Updates an existing listing. **Only the owner can update.**
+
+#### Headers
+```
+Content-Type: application/json
+X-Auth-User-Id: 1
+```
+
+#### Example: Update venue listing with ID 1
+
+**Request:**
+```json
+{
+  "category": "VENUE",
+  "title": "Grand Ballroom Colombo - UPDATED",
+  "description": "Newly renovated luxurious venue",
+  "priceMin": 120000,
+  "priceMax": 300000,
+  "district": "Colombo",
+  "city": "Colombo 07",
+  "imageUrls": ["https://example.com/new-venue.jpg"],
+  "details": "{\"capacity\": 350, \"airConditioned\": true, \"parkingAvailable\": true}"
+}
+```
+
+**Expected Response:** `204 No Content` (empty body)
+
+**Error Response (403 Unauthorized):**
+```
+"Unauthorized update attempt."
+```
+
+---
+
+## 5️⃣ UPDATE LISTING RATING (Internal)
+
+### **PUT** `http://localhost:8081/api/listings/{id}/rating`
+
+Used internally by the Review Service to sync ratings.
+
+#### Headers
+```
+Content-Type: application/json
+```
+
+#### Example: Update rating for listing ID 1
+
+**Request Body:**
+```json
+4.5
+```
+
+**Expected Response:** `204 No Content`
+
+---
+
+## 🧪 Testing Workflow
+
+### Complete Test Sequence
+
+1. **Create a listing** (POST)
+   - Note the listing ID from database
+
+2. **Verify creation** (GET by ID)
+   - Check all fields are correct
+
+3. **List vendor's listings** (GET vendor/me)
+   - Verify the new listing appears
+
+4. **Update the listing** (PUT)
+   - Change title or price
+
+5. **Verify update** (GET by ID)
+   - Confirm changes were saved
+
+6. **Update rating** (PUT rating)
+   - Set a test rating
+
+7. **Verify rating** (GET by ID)
+   - Confirm avgRating field updated
+
+---
+
+## 📊 Verification in Database
+
+### Check MySQL Database
+
+1. **Open phpMyAdmin:** `http://localhost:8091`
+2. **Login:** username `root`, password `password`
+3. **Select database:** `wedease_listing_db`
+
+### Tables to Check
+
+| Table | Contains |
+|-------|----------|
+| `listing` | Common fields (title, description, price, etc.) |
+| `venue_details` | Venue-specific fields |
+| `photographer_details` | Photographer-specific fields |
+| `salon_details` | Salon-specific fields |
+| `dress_details` | Dress-specific fields |
+
+### Sample Query
+```sql
+SELECT * FROM listing WHERE id = 1;
+SELECT * FROM venue_details WHERE listing_id = 1;
+```
+
+---
+
+## ❌ Common Errors & Solutions
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `500 Internal Server Error` | Incorrect JSON format | Use `details` as JSON string |
+| `400 Bad Request - Title is required` | Missing required field | Add `title` and `category` |
+| `404 Not Found` | Invalid listing ID | Check if listing exists in DB |
+| `403 Unauthorized` | Wrong vendor trying to update | Use correct `X-Auth-User-Id` |
+| `Connection refused` | Service not running | Start listing service |
+
+---
+
+## 📝 Important Notes
+
+> ⚠️ **Critical:** The `details` field must be a **JSON string**, not a JSON object!
+
+✅ **Correct:**
+```json
+"details": "{\"capacity\": 200}"
+```
+
+❌ **Wrong:**
+```json
+"details": {"capacity": 200}
+```
+
+> ⚠️ **Category Fields:** Each category has specific valid fields. Don't mix fields from different categories!
+
+| Category | Valid Fields |
+|----------|-------------|
+| VENUE | `capacity`, `airConditioned`, `parkingAvailable` |
+| PHOTOGRAPHER | `droneAvailable`, `preShootIncluded` |
+| SALON | `gender`, `services` |
+| DRESS | `materialType` |
+
+---
+
+## 🎯 Quick Test Checklist
+
+```
+□ Create VENUE listing successfully
+□ Create PHOTOGRAPHER listing successfully
+□ Create SALON listing successfully
+□ Create DRESS listing successfully
+□ GET listing by ID returns correct data
+□ GET vendor listings returns all user's listings
+□ UPDATE listing updates fields correctly
+□ UPDATE with wrong vendor ID returns 403
+□ UPDATE rating changes avgRating field
+□ All data persists in MySQL database
+```
+
+---
+
+## 🚀 Postman Collection Import (Optional)
+
+You can create a Postman collection with all these requests for easier testing. Save each request with appropriate headers and body templates.

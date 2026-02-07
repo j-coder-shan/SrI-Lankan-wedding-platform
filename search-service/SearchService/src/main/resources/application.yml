@@ -1,0 +1,28 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: SearchService
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
+  data:
+    mongodb:
+      # Local development MongoDB to avoid Atlas TLS issues
+      uri: mongodb://127.0.0.1:27017/wedease_search_db
+      auto-index-creation: true
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: search-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        "[spring.json.trusted.packages]": "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

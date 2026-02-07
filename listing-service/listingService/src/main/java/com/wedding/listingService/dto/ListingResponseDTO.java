@@ -26,5 +26,5 @@ public class ListingResponseDTO {
     private Double avgRating;
     
     private List<String> imageUrls;
-    private Object details; 
+    private Object details; // Category-specific details (VenueDetails, etc.)
 }
