@@ -5,6 +5,8 @@ import { VendorListings } from './components/VendorListings';
 import { VendorDetails } from './components/VendorDetails';
 import { AboutPage } from './components/AboutPage';
 import { ContactPage } from './components/ContactPage';
+import { UserDashboard } from './components/UserDashboard';
+import { VendorDashboard } from './components/VendorDashboard';
 
 export type Category = 'dress' | 'venue' | 'saloon' | 'photographer';
 
@@ -39,6 +41,8 @@ function App() {
         <Route path="/vendors/:id" element={<VendorDetails />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/dashboard/user" element={<UserDashboard />} />
+        <Route path="/dashboard/vendor" element={<VendorDashboard />} />
       </Routes>
     </Router>
   );

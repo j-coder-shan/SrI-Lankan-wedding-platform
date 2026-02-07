@@ -22,8 +22,14 @@ export function Navbar() {
                         <Link to="/contact" className="text-gray-700 hover:text-rose-500 transition-colors">
                             Contact
                         </Link>
+                        <Link to="/dashboard/user" className="text-gray-700 hover:text-rose-500 transition-colors">
+                            User
+                        </Link>
+                        <Link to="/dashboard/vendor" className="text-gray-700 hover:text-rose-500 transition-colors">
+                            Vendor
+                        </Link>
                         <Button variant="outline" className="border-rose-500 text-rose-500 hover:bg-rose-50">
-                            Vendor Login
+                            Login
                         </Button>
                     </nav>
                 </div>
