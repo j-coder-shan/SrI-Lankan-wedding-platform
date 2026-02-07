@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import VendorAdPage from './pages/VendorAdPage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 export default function App() {
   return (
@@ -14,8 +16,14 @@ export default function App() {
                 </Link>
               </div>
               <div className="flex items-center space-x-4">
+                <Link to="/login" className="text-gray-600 hover:text-pink-600 font-medium transition-colors text-sm">
+                  Login
+                </Link>
+                <Link to="/signup" className="text-gray-600 hover:text-pink-600 font-medium transition-colors text-sm">
+                  Signup
+                </Link>
                 <Link to="/" className="text-gray-600 hover:text-pink-600 font-medium transition-colors">
-                  Vendor Dashboard
+                  Dashboard
                 </Link>
                 <Link to="/add-ad" className="bg-pink-500 text-white px-4 py-2 rounded-full hover:bg-pink-600 transition-colors shadow-md text-sm font-semibold">
                   + Post Ad
@@ -28,6 +36,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<VendorAdPage />} />
           <Route path="/add-ad" element={<VendorAdPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
         </Routes>
       </div>
     </Router>

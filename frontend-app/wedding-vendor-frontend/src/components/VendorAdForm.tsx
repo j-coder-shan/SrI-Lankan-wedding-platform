@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import axios from 'axios';
 
 type VendorAdFormData = {
     title: string;
@@ -10,13 +11,46 @@ type VendorAdFormData = {
 };
 
 export default function VendorAdForm() {
-    const { register, handleSubmit, formState: { errors } } = useForm<VendorAdFormData>();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<VendorAdFormData>();
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-    const onSubmit = (data: VendorAdFormData) => {
-        console.log('Form Data:', data);
-        console.log('Image:', imagePreview);
-        alert('Advertisement Submitted! Check console for data.');
+    const onSubmit = async (data: VendorAdFormData) => {
+        setIsSubmitting(true);
+        setSubmitStatus('idle');
+        try {
+            // Map frontend form data to Backend DTO (ListingRequestDTO)
+            const payload = {
+                title: data.title,
+                category: data.category,
+                priceMin: data.price, // Mapping base price to min/max for now
+                priceMax: data.price,
+                description: data.description,
+                details: JSON.stringify({ features: data.features }), // Storing features in details JSON
+                // features: data.features, // Backend DTO doesn't have features directly, using details or description
+            };
+
+            // Sending request to proxy /api/listings -> http://localhost:8081/api/listings
+            const response = await axios.post('/api/listings', payload, {
+                headers: {
+                    'X-Auth-User-Id': 1, // Hardcoded Vendor ID for testing as requested
+                }
+            });
+
+            if (response.status === 201) {
+                setSubmitStatus('success');
+                reset();
+                setImagePreview(null);
+                alert('Advertisement Published Successfully!');
+            }
+        } catch (error) {
+            console.error('Error submitting advertisement:', error);
+            setSubmitStatus('error');
+            alert('Failed to publish advertisement. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,10 +160,15 @@ export default function VendorAdForm() {
 
                 <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:from-pink-600 hover:to-purple-700 focus:ring-4 focus:ring-pink-300 transform transition-transform hover:-translate-y-0.5"
+                    disabled={isSubmitting}
+                    className={`w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:from-pink-600 hover:to-purple-700 focus:ring-4 focus:ring-pink-300 transform transition-transform hover:-translate-y-0.5 ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
                 >
-                    Publish Advertisement
+                    {isSubmitting ? 'Publishing...' : 'Publish Advertisement'}
                 </button>
+
+                {submitStatus === 'error' && (
+                    <p className="text-center text-red-500 mt-2">Something went wrong. ensure backend is running.</p>
+                )}
             </form>
         </div>
     );
