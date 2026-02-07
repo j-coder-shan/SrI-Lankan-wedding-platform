@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart, Search } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -11,6 +12,7 @@ interface HomePageProps {
 }
 
 export function HomePage({ onCategorySelect }: HomePageProps) {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -31,7 +33,11 @@ export function HomePage({ onCategorySelect }: HomePageProps) {
               <a href="#" className="text-gray-700 hover:text-rose-500 transition-colors">
                 Contact
               </a>
-              <Button variant="outline" className="border-rose-500 text-rose-500 hover:bg-rose-50">
+              <Button
+                variant="outline"
+                className="border-rose-500 text-rose-500 hover:bg-rose-50"
+                onClick={() => navigate('/login')}
+              >
                 Vendor Login
               </Button>
             </nav>
@@ -50,7 +56,7 @@ export function HomePage({ onCategorySelect }: HomePageProps) {
             <p className="text-xl text-gray-600 mb-8">
               Discover the perfect vendors for your special day. From stunning venues to exquisite dresses, we've got everything you need.
             </p>
-            
+
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto bg-white rounded-full shadow-lg p-2 flex gap-2">
               <div className="flex-1 flex items-center px-4">
@@ -143,7 +149,7 @@ export function HomePage({ onCategorySelect }: HomePageProps) {
               <ul className="space-y-2 text-gray-400">
                 <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Become a Vendor</a></li>
+                <li><a href="#" className="hover:text-white transition-colors" onClick={(e) => { e.preventDefault(); navigate('/add-ad'); }}>Become a Vendor</a></li>
               </ul>
             </div>
             <div>
