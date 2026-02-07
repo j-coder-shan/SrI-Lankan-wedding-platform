@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/calendar_db
+    url: jdbc:postgresql://localhost:5435/calendar_db
     username: postgres
-    password: password
+    password: 1234
   jpa:
     hibernate:
       ddl-auto: update
