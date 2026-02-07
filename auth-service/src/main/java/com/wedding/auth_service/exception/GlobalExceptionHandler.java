@@ -31,7 +31,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Method not allowed: " + ex.getMethod());
-        error.put("supported", String.join(", ", ex.getSupportedMethods() != null ? ex.getSupportedMethods() : new String[]{}));
+        error.put("supported",
+                String.join(", ", ex.getSupportedMethods() != null ? ex.getSupportedMethods() : new String[] {}));
         return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
@@ -39,8 +40,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleBodyParseError(HttpMessageNotReadableException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Malformed JSON request or wrong Content-Type");
-        error.put("details", ex.getMostSpecificCause() != null ? ex.getMostSpecificCause().getMessage() : ex.getMessage());
+        error.put("details",
+                ex.getMostSpecificCause() != null ? ex.getMostSpecificCause().getMessage() : ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> handleDataIntegrityViolation(
+            org.springframework.dao.DataIntegrityViolationException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Email already exists");
+        error.put("details", "A user with this email address already exists. Please use a different email or login.");
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(Exception.class)

@@ -2,6 +2,33 @@ import React from 'react';
 import { Heart } from 'lucide-react';
 import { Button } from './ui/button';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext';
+
+function AuthButton() {
+    const { user, isAuthenticated, logout } = useAuth();
+
+    if (!isAuthenticated) {
+        return (
+            <Link to="/login">
+                <Button variant="outline" className="border-rose-500 text-rose-500 hover:bg-rose-50">
+                    Login
+                </Button>
+            </Link>
+        );
+    }
+
+    const dashboardLink = user?.role === 'ROLE_VENDOR' ? '/dashboard/vendor' : '/dashboard/couple';
+
+    return (
+        <div className="flex items-center gap-4">
+            <Link to={dashboardLink}>
+                <Button variant="outline" className="border-rose-500 text-rose-500 hover:bg-rose-50">
+                    {user?.fullName || user?.email || 'Dashboard'}
+                </Button>
+            </Link>
+        </div>
+    );
+}
 
 export function Navbar() {
     return (
@@ -22,12 +49,12 @@ export function Navbar() {
                         <Link to="/contact" className="text-gray-700 hover:text-rose-500 transition-colors">
                             Contact
                         </Link>
-                        <Button variant="outline" className="border-rose-500 text-rose-500 hover:bg-rose-50">
-                            Vendor Login
-                        </Button>
+                        {/* Dynamic Auth Button */}
+                        <AuthButton />
                     </nav>
+
                 </div>
             </div>
-        </header>
+        </header >
     );
 }

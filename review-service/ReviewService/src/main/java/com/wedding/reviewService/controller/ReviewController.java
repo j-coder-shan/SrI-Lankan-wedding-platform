@@ -22,4 +22,9 @@ public class ReviewController {
         Review savedReview = reviewService.createReviewAndSyncRating(reviewRequest);
         return new ResponseEntity<>(savedReview, HttpStatus.CREATED);
     }
+
+    @GetMapping("/listing/{listingId}")
+    public ResponseEntity<java.util.List<Review>> getReviewsByListing(@PathVariable Long listingId) {
+        return ResponseEntity.ok(reviewService.getReviewsByListing(listingId));
+    }
 }

@@ -6,6 +6,8 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -48,16 +50,29 @@ public class CustomAuthFilter extends AbstractGatewayFilterFactory<CustomAuthFil
                     String userId = jwtUtil.extractUserId(authHeader);
                     String role = jwtUtil.extractUserRole(authHeader);
 
-                    // Mutate the request to add headers for downstream services
-                    exchange = exchange.mutate()
-                            .request(r -> r.headers(headers -> {
-                                headers.add("X-Auth-User-Id", userId);
-                                headers.add("X-Auth-User-Role", role);
-                            }))
-                            .build();
+                    System.out.println("DEBUG: Token Validated. UserId: " + userId + ", Role: " + role);
+
+                    // Use Decorator to safely modify headers (bypassing ReadOnlyHttpHeaders issue)
+                    ServerHttpRequest request = exchange.getRequest();
+                    ServerHttpRequestDecorator decoratedRequest = new ServerHttpRequestDecorator(request) {
+                        @Override
+                        public HttpHeaders getHeaders() {
+                            HttpHeaders headers = new HttpHeaders();
+                            headers.putAll(super.getHeaders());
+                            if (userId != null)
+                                headers.set("X-Auth-User-Id", userId);
+                            if (role != null)
+                                headers.set("X-Auth-User-Role", role);
+                            return headers;
+                        }
+                    };
+
+                    exchange = exchange.mutate().request(decoratedRequest).build();
 
                 } catch (Exception e) {
-                    System.out.println("Invalid Token access: " + e.getMessage());
+                    System.out
+                            .println("Invalid Token access error: " + e.getClass().getName() + " - " + e.getMessage());
+                    e.printStackTrace(); // Print stack trace to find NPE source
                     exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                     return exchange.getResponse().setComplete();
                 }

@@ -4,3 +4,6 @@ spring:
   config:
     # Connect to Config Server on port 8888
     import: "optional:configserver:http://localhost:8888/"
+
+jwt:
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970

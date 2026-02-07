@@ -20,7 +20,6 @@ public class ReviewServiceImpl implements ReviewService {
         this.listingClient = listingClient;
     }
 
-
     @Override
     @Transactional
     public Review createReviewAndSyncRating(ReviewRequest request) {
@@ -49,5 +48,10 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         return savedReview;
+    }
+
+    @Override
+    public java.util.List<Review> getReviewsByListing(Long listingId) {
+        return reviewRepository.findByListingId(listingId);
     }
 }

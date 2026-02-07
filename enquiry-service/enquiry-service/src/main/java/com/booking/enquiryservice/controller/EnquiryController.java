@@ -28,22 +28,22 @@ public class EnquiryController {
     // 2. Status Update
     @PatchMapping("/{id}/status")
     public Enquiry updateStatus(@PathVariable Long id,
-                                @RequestParam EnquiryStatus status,
-                                @RequestHeader("X-User-Id") Long vendorId) { // Simulating ID from Token
+            @RequestParam EnquiryStatus status,
+            @RequestHeader("X-Auth-User-Id") Long vendorId) { // Simulating ID from Token
         return service.updateStatus(id, status, vendorId);
     }
 
     // 3. Vendor View (Task 1.3)
     @GetMapping("/vendor/me")
-    public Page<Enquiry> getVendorEnquiries(@RequestHeader("X-User-Id") Long vendorId,
-                                            @RequestParam(defaultValue = "0") int page,
-                                            @RequestParam(defaultValue = "10") int size) {
+    public Page<Enquiry> getVendorEnquiries(@RequestHeader("X-Auth-User-Id") Long vendorId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         return repository.findByVendorId(vendorId, PageRequest.of(page, size));
     }
 
     // 4. Couple View (Task 1.3)
     @GetMapping("/couple/me")
-    public List<Enquiry> getCoupleEnquiries(@RequestHeader("X-User-Id") Long coupleId) {
+    public List<Enquiry> getCoupleEnquiries(@RequestHeader("X-Auth-User-Id") Long coupleId) {
         return repository.findByCoupleId(coupleId);
     }
 }
