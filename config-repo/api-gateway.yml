@@ -26,6 +26,11 @@ spring:
             - Path=/api/auth/**
           filters:
             - StripPrefix=1
+        - id: listing-service-public
+          uri: lb://LISTING-SERVICE
+          predicates:
+            - Path=/api/listings/uploads/**
+          # No Auth Filter for static images
         - id: listing-service
           uri: lb://LISTING-SERVICE
           predicates:
@@ -51,11 +56,9 @@ spring:
           filters:
             - name: CustomAuthFilter
         - id: search-service
-          uri: lb://SEARCH-SERVICE
+          uri: lb://search-service
           predicates:
             - Path=/api/search/**
-          filters:
-            - StripPrefix=1
         - id: calendar-service
           uri: lb://CALENDAR-SERVICE
           predicates:

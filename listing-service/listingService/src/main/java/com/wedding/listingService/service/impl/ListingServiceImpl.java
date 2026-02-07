@@ -38,7 +38,7 @@ public class ListingServiceImpl implements ListingService {
     public void createListing(ListingRequestDTO requestDTO, Long vendorId) {
         Listing newListing = listingFactory.createListing(requestDTO);
         newListing.setVendorId(vendorId);
-        newListing.setStatus(ListingStatus.PENDING); // Default status: PENDING
+        newListing.setStatus(ListingStatus.PUBLISHED); // Default status: PUBLISHED for immediate visibility
 
         listingRepository.save(newListing);
 
@@ -115,9 +115,25 @@ public class ListingServiceImpl implements ListingService {
         // Note: lat/lon would be extracted from listing if available
         // For now, they'll be null unless you add location fields to Listing entity
 
-        kafkaTemplate.send(KafkaTopicConfig.LISTING_TOPIC, event);
-        System.out.println("📨 Published Kafka event: " + operation + " - Listing ID: " + listing.getId() + " (Status: "
-                + listing.getStatus() + ")");
+        System.out.println("📨 Attempting to publish Kafka event for Listing ID: " + listing.getId());
+        try {
+            var future = kafkaTemplate.send(KafkaTopicConfig.LISTING_TOPIC, event);
+            future.whenComplete((result, ex) -> {
+                if (ex == null) {
+                    System.out.println("✅ Kafka Send SUCCESS for Listing ID: " + listing.getId() +
+                            " to topic: " + result.getRecordMetadata().topic() +
+                            " partition: " + result.getRecordMetadata().partition() +
+                            " offset: " + result.getRecordMetadata().offset());
+                } else {
+                    System.err
+                            .println("❌ Kafka Send FAILED for Listing ID: " + listing.getId() + ": " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+            });
+        } catch (Exception e) {
+            System.err.println("❌ FAILED to initiate Kafka send for Listing ID: " + listing.getId());
+            e.printStackTrace();
+        }
     }
 
     // Placeholder for other interface methods

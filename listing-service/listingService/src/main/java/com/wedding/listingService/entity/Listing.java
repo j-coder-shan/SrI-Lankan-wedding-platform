@@ -40,6 +40,8 @@ public class Listing {
 
     // Task 1.3: Image Handling
     @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL, orphanRemoval = true)
+    @lombok.ToString.Exclude
+    @lombok.EqualsAndHashCode.Exclude
     private List<ListingImage> images = new ArrayList<>();
 
     public void addImages(List<String> imageUrls) {

@@ -32,6 +32,9 @@ public class SearchController {
             @RequestParam(required = false) Double lon,
             @RequestParam(required = false, defaultValue = "10") Double maxDistanceKm) {
 
+        System.out.println("🔍 Search Request Received: keyword=" + keyword + ", district=" + district
+                + ", category=" + category + ", userBudget=" + userBudget);
+
         Query query = new Query();
 
         // 1. Text Search Criteria (using @TextIndexed fields)
@@ -41,13 +44,13 @@ public class SearchController {
         }
 
         // 2. Criteria.where("district").is(district) (Task 2.4)
-        if (district != null) {
-            query.addCriteria(Criteria.where("district").is(district.toUpperCase()));
+        if (district != null && !district.isEmpty()) {
+            query.addCriteria(Criteria.where("district").regex(district, "i")); // Case-insensitive
         }
 
-        // New Category Criteria
-        if (category != null) {
-            query.addCriteria(Criteria.where("category").is(category));
+        // New Category Criteria - Case Insensitive
+        if (category != null && !category.isEmpty()) {
+            query.addCriteria(Criteria.where("category").regex(category, "i"));
         }
 
         // 3. Criteria.where("priceMin").lte(userBudget) (Task 2.4)
@@ -72,6 +75,10 @@ public class SearchController {
 
         // Add sorting (e.g., sort by distance or rating) if needed
 
-        return mongoTemplate.find(query, SearchListing.class);
+        List<SearchListing> results = mongoTemplate.find(query, SearchListing.class);
+        System.out.println("✅ Search Results Found: " + results.size());
+        results.forEach(r -> System.out.println("   - Found: " + r.getTitle() + " (" + r.getCategory() + ")"));
+
+        return results;
     }
 }

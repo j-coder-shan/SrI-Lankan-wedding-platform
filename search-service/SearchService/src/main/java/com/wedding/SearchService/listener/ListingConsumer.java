@@ -21,35 +21,45 @@ public class ListingConsumer {
      * Listens to the listing-events topic and syncs data to MongoDB (Task 2.3).
      */
     @SuppressWarnings("null")
-    @KafkaListener(topics = "listing-events", groupId = "search-group") // Task 2.3: Annotated method
+    @KafkaListener(topics = "listing-events", groupId = "search-group-debug-FORCE-1") // Task 2.3: Force new group
     public void consumeListingEvent(ListingEvent event) {
+        System.out.println("📥 Kafka Consumer Received Event: " + event);
 
-        switch (event.getOperation().toUpperCase()) {
-            case "CREATE":
-            case "UPDATE":
-                // Logic: Map DTO to SearchListing document and repository.save() (Task 2.3)
-                if ("PUBLISHED".equalsIgnoreCase(event.getStatus())) {
-                    SearchListing document = mapEventToDocument(event);
-                    searchListingRepository.save(document);
-                    System.out.println("SYNC: Created/Updated SearchListing ID: " + event.getId());
-                } else {
-                    // If status is PENDING/REJECTED, remove it from the search index
+        try {
+            switch (event.getOperation().toUpperCase()) {
+                case "CREATE":
+                case "UPDATE":
+                    // Logic: Map DTO to SearchListing document and repository.save() (Task 2.3)
+                    if ("PUBLISHED".equalsIgnoreCase(event.getStatus())) {
+                        SearchListing document = mapEventToDocument(event);
+                        searchListingRepository.save(document);
+                        System.out.println("✅ SYNC: Created/Updated SearchListing ID: " + event.getId()
+                                + " | Category: " + document.getCategory()
+                                + " | Status: " + document.getStatus());
+                    } else {
+                        // If status is PENDING/REJECTED, remove it from the search index
+                        if (event.getId() != null) {
+                            searchListingRepository.deleteById(event.getId());
+                            System.out.println("⚠️ SYNC: Removed Listing ID: " + event.getId() + " (Status: "
+                                    + event.getStatus() + ")");
+                        }
+                    }
+                    break;
+
+                case "DELETE":
+                    // Logic: repository.deleteById() (Task 2.3)
                     if (event.getId() != null) {
                         searchListingRepository.deleteById(event.getId());
+                        System.out.println("🗑️ SYNC: Deleted SearchListing ID: " + event.getId());
                     }
-                }
-                break;
+                    break;
 
-            case "DELETE":
-                // Logic: repository.deleteById() (Task 2.3)
-                if (event.getId() != null) {
-                    searchListingRepository.deleteById(event.getId());
-                    System.out.println("SYNC: Deleted SearchListing ID: " + event.getId());
-                }
-                break;
-
-            default:
-                System.out.println("SYNC: Unknown operation type: " + event.getOperation());
+                default:
+                    System.out.println("❓ SYNC: Unknown operation type: " + event.getOperation());
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Error processing Kafka event: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

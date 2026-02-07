@@ -11,6 +11,7 @@ import { listingService } from '../../services/listingService';
 import { Listing } from '../../types/listing';
 import { toast } from 'sonner';
 import { Plus, Image as ImageIcon, Trash2 } from 'lucide-react';
+import { ImageUpload } from '../ui/ImageUpload';
 
 export function VendorDashboard() {
     const { user, logout } = useAuth();
@@ -189,12 +190,39 @@ export function VendorDashboard() {
                                 <Textarea id="description" name="description" value={formData.description} onChange={handleInputChange} placeholder="Describe your service..." rows={4} />
                             </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="imageUrls">Image URLs (Comma separated)</Label>
-                                <Textarea id="imageUrls" name="imageUrls" value={formData.imageUrls} onChange={handleInputChange} placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg" />
+                            <div className="space-y-4">
+                                <Label>Images</Label>
+                                <ImageUpload onImagesUploaded={(urls) => {
+                                    // Append new URLs to the existing string list (comma separated)
+                                    const currentUrls = formData.imageUrls ? formData.imageUrls.split(',').filter(u => u.length > 0) : [];
+                                    const newUrls = [...currentUrls, ...urls];
+                                    setFormData(prev => ({ ...prev, imageUrls: newUrls.join(',') }));
+                                }} />
+
+                                {/* Image Previews */}
+                                {formData.imageUrls && (
+                                    <div className="flex flex-wrap gap-4 mt-4">
+                                        {formData.imageUrls.split(',').filter(url => url.length > 0).map((url, index) => (
+                                            <div key={index} className="relative w-24 h-24 border rounded overflow-hidden group">
+                                                <img src={url} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const urls = formData.imageUrls.split(',');
+                                                        const newUrls = urls.filter((_, i) => i !== index);
+                                                        setFormData(prev => ({ ...prev, imageUrls: newUrls.join(',') }));
+                                                    }}
+                                                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <Trash2 className="w-3 h-3" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
-                            <Button type="submit" className="w-full bg-rose-500 hover:bg-rose-600" disabled={loading}>
+                            <Button type="submit" className="w-full bg-rose-500 hover:bg-rose-600 mt-4" disabled={loading}>
                                 {loading ? 'Creating Listing...' : 'Create Listing'}
                             </Button>
                         </form>
