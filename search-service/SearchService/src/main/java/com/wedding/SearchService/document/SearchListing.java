@@ -32,8 +32,5 @@ public class SearchListing {
 
     private Double avgRating;
     private String status; // PUBLISHED, PENDING, etc.
-    public void setMainImageUrl(String mainImageUrl2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setMainImageUrl'");
-    }
+    private String mainImageUrl;
 }

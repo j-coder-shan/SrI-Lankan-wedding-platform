@@ -43,9 +43,9 @@ public class EnquiryService {
         boolean isAvailable;
         try {
             isAvailable = calendarClient.checkAvailability(
-                enquiry.getVendorId(),
-                enquiry.getEventDate().toString(),
-                "FULL_DAY" // Defaulting to full day for weddings
+                    enquiry.getVendorId(),
+                    enquiry.getEventDate().toString(),
+                    "FULL_DAY" // Defaulting to full day for weddings
             );
         } catch (Exception ex) {
             // If calendar-service is down or unreachable, surface a clear 503-style error
@@ -69,6 +69,7 @@ public class EnquiryService {
         if (newStatus == null) {
             throw new IllegalArgumentException("status is required");
         }
+        @SuppressWarnings("null")
         Enquiry enquiry = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Enquiry not found"));
 

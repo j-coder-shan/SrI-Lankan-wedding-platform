@@ -20,6 +20,7 @@ public class ListingConsumer {
     /**
      * Listens to the listing-events topic and syncs data to MongoDB (Task 2.3).
      */
+    @SuppressWarnings("null")
     @KafkaListener(topics = "listing-events", groupId = "search-group") // Task 2.3: Annotated method
     public void consumeListingEvent(ListingEvent event) {
 

@@ -1,6 +1,7 @@
 package com.wedding.api_gateway.filter;
 
 import com.wedding.api_gateway.util.JwtUtil;
+import java.util.List;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
@@ -26,13 +27,15 @@ public class CustomAuthFilter extends AbstractGatewayFilterFactory<CustomAuthFil
             if (validator.isSecured.test(exchange.getRequest())) {
 
                 // 2. Check for Authorization header
-                if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+                // 2. Check for Authorization header
+                List<String> authHeaders = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
+                if (authHeaders == null || authHeaders.isEmpty()) {
                     exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                     return exchange.getResponse().setComplete();
                 }
 
                 // 3. Extract the token
-                String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+                String authHeader = authHeaders.get(0);
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
                     authHeader = authHeader.substring(7);
                 }

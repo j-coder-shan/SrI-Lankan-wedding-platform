@@ -33,12 +33,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/auth/forgot-password",
             "/actuator");
 
+    @SuppressWarnings("null")
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         return PUBLIC_ENDPOINTS.stream().anyMatch(path::startsWith);
     }
 
+    @SuppressWarnings("null")
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,

@@ -20,6 +20,7 @@ public class ChatController {
         private final ChatService chatService;
         private final SimpMessagingTemplate messagingTemplate;
 
+        @SuppressWarnings("null")
         @MessageMapping("/chat.send")
         public void sendMessage(@Payload ChatMessageDTO messageDTO, Principal principal) {
 

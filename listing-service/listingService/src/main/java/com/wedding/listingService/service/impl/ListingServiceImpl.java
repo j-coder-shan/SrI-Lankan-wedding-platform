@@ -51,6 +51,7 @@ public class ListingServiceImpl implements ListingService {
     @Override
     @Transactional
     public void updateListing(Long listingId, ListingRequestDTO requestDTO, Long vendorId) {
+        @SuppressWarnings("null")
         Listing existingListing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found with ID: " + listingId));
 
@@ -79,6 +80,7 @@ public class ListingServiceImpl implements ListingService {
     @Transactional
     public void updateListingRating(Long listingId, Double newAvgRating) {
         // Task 3.2: Internal endpoint used by Review Service
+        @SuppressWarnings("null")
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found"));
 
@@ -119,6 +121,7 @@ public class ListingServiceImpl implements ListingService {
     }
 
     // Placeholder for other interface methods
+    @SuppressWarnings("null")
     @Override
     public ListingResponseDTO getListingById(Long listingId) {
         Listing listing = listingRepository.findById(listingId)

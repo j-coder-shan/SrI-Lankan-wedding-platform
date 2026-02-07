@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8084
 
 spring:
   application:
@@ -10,7 +10,7 @@ spring:
   data:
     mongodb:
       # Local development MongoDB to avoid Atlas TLS issues
-      uri: mongodb://127.0.0.1:27017/wedease_search_db
+      uri: mongodb://127.0.0.1:27017/search_db
       auto-index-creation: true
 
   kafka:

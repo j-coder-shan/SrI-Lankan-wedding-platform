@@ -29,7 +29,8 @@ public class CalendarService {
         // 2. Check if a FULL_DAY block already exists (blocks everything)
         boolean hasFullDay = events.stream()
                 .anyMatch(e -> e.getTimeSlot() == TimeSlot.FULL_DAY);
-        if (hasFullDay) return false;
+        if (hasFullDay)
+            return false;
 
         // 3. Check specific slot conflicts
         if (requestedSlot == TimeSlot.MORNING) {
@@ -44,6 +45,7 @@ public class CalendarService {
     }
 
     // Task 2.3: Booking Logic
+    @SuppressWarnings("null")
     public VendorEvent registerBooking(VendorEvent event) {
         try {
             // Optional: Run checkAvailability here first for a faster user feedback loop

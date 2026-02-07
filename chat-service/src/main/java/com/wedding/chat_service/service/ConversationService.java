@@ -50,6 +50,7 @@ public class ConversationService {
 
     public void updateConversationMetadata(String conversationId, Long senderId) {
 
+        @SuppressWarnings("null")
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
 
@@ -66,6 +67,7 @@ public class ConversationService {
 
     public void markAsRead(String conversationId, Long userId) {
 
+        @SuppressWarnings("null")
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
 

@@ -23,6 +23,7 @@ public class ChatService {
     @Transactional
     public ChatMessage saveMessage(String conversationId, Long senderId, String content) {
 
+        @SuppressWarnings({ "unused", "null" })
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
 
@@ -47,6 +48,7 @@ public class ChatService {
         return messages.map(this::mapToDTO);
     }
 
+    @SuppressWarnings("null")
     public Conversation getConversation(String conversationId) {
         return conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));

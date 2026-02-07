@@ -15,6 +15,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Autowired
     private JwtChannelInterceptor jwtChannelInterceptor;
 
+    @SuppressWarnings("null")
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         // Enable simple broker for destinations with prefixes /topic and /queue
@@ -27,6 +28,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setUserDestinationPrefix("/user");
     }
 
+    @SuppressWarnings("null")
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
@@ -34,6 +36,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .withSockJS(); // Fallback for browsers that don't support WebSocket
     }
 
+    @SuppressWarnings("null")
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         // Add JWT interceptor to validate tokens on WebSocket connection

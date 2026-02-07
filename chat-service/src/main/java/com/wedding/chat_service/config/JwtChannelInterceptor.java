@@ -18,10 +18,11 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
     private JwtUtil jwtUtil;
 
     @Override
-    public Message<?> preSend(Message<?> message, MessageChannel channel) {
+    public Message<?> preSend(@SuppressWarnings("null") Message<?> message,
+            @SuppressWarnings("null") MessageChannel channel) {
 
-        StompHeaderAccessor accessor =
-                MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+        @SuppressWarnings("null")
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
         // Only validate on CONNECT frame (when client first connects)
         if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {

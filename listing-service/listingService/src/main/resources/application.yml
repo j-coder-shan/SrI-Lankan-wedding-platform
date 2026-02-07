@@ -1,5 +1,5 @@
 server:
-  port: 8081 # Unique port for this microservice
+  port: 8083 # Unique port for this microservice
 
 # Eureka Client Configuration
 eureka:
@@ -15,9 +15,9 @@ spring:
       enabled: false
   # --- DATABASE (MySQL) Configuration ---
   datasource:
-    url: jdbc:mysql://localhost:3307/wedease_listing_db?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3307/listing_db?createDatabaseIfNotExist=true
     username: root
-    password: password
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
   
   # --- JPA/Hibernate Configuration ---

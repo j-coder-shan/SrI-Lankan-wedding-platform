@@ -21,6 +21,7 @@ public class AnalyticsConsumer {
         this.revenueRepository = revenueRepository;
     }
 
+    @SuppressWarnings("null")
     @KafkaListener(topics = "invoice-paid-events", groupId = "analytics-group")
     public void handleInvoicePaid(InvoicePaidEvent event) {
         log.info("Received Payment Event for Invoice: {}", event.getInvoiceId());

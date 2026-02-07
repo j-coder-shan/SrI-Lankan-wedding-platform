@@ -14,7 +14,7 @@ spring:
       server:
         native:
           # Points config server at the local config-repo inside this workspace
-          search-locations: file:///D:/Acedemic/Fullstack/FullStack%20project/SrI-Lankan-wedding-platform/config-repo
+          search-locations: file:///c:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/config-repo
 
 eureka:
   client:

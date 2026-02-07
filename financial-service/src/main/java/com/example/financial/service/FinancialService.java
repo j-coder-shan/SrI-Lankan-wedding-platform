@@ -52,12 +52,14 @@ public class FinancialService {
         invoice.dueDate = LocalDate.now().plusDays(7);
 
         CommissionInvoice savedInvoice = invoiceRepository.save(invoice);
-        System.out.println("Generated Invoice #" + savedInvoice.id + " for Enquiry " + request.enquiryId + ". Amount: " + amountDue);
+        System.out.println("Generated Invoice #" + savedInvoice.id + " for Enquiry " + request.enquiryId + ". Amount: "
+                + amountDue);
         return savedInvoice;
     }
 
     @Transactional
     public CommissionInvoice processPayment(Long invoiceId, PaymentMethod method, String referenceNo) {
+        @SuppressWarnings("null")
         CommissionInvoice invoice = invoiceRepository.findById(invoiceId)
                 .orElseThrow(() -> new RuntimeException("Invoice not found: " + invoiceId));
 
