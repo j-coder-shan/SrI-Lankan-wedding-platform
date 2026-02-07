@@ -10,17 +10,17 @@ import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Vendor } from '../App';
-import { reviews } from '../data/mockData';
+import { reviews, vendors } from '../data/mockData';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { toast } from 'sonner';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Navbar } from './Navbar';
 
-interface VendorDetailsProps {
-  vendor: Vendor;
-  onBack: () => void;
-}
+export function VendorDetails() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const vendor = vendors.find(v => v.id === Number(id));
 
-export function VendorDetails({ vendor, onBack }: VendorDetailsProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [bookingDate, setBookingDate] = useState('');
   const [bookingName, setBookingName] = useState('');
@@ -31,6 +31,10 @@ export function VendorDetails({ vendor, onBack }: VendorDetailsProps) {
   const [reviewComment, setReviewComment] = useState('');
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
+
+  if (!vendor) {
+    return <div>Vendor not found</div>;
+  }
 
   const vendorReviews = reviews.filter(r => r.vendorId === vendor.id);
 
@@ -62,12 +66,13 @@ export function VendorDetails({ vendor, onBack }: VendorDetailsProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navbar />
       {/* Header */}
-      <div className="bg-white shadow-sm sticky top-0 z-40">
+      <div className="bg-white shadow-sm sticky top-[73px] z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Button 
-            variant="ghost" 
-            onClick={onBack}
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
             className="gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -129,7 +134,7 @@ export function VendorDetails({ vendor, onBack }: VendorDetailsProps) {
                     onClick={() => setIsFavorite(!isFavorite)}
                     className="shrink-0"
                   >
-                    <Heart 
+                    <Heart
                       className={`w-6 h-6 ${isFavorite ? 'fill-rose-500 text-rose-500' : 'text-gray-400'}`}
                     />
                   </Button>
@@ -146,7 +151,7 @@ export function VendorDetails({ vendor, onBack }: VendorDetailsProps) {
                 <TabsTrigger value="reviews">Reviews ({vendorReviews.length})</TabsTrigger>
                 <TabsTrigger value="about">About</TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="reviews" className="space-y-4 mt-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-semibold">Customer Reviews</h3>
@@ -220,11 +225,10 @@ export function VendorDetails({ vendor, onBack }: VendorDetailsProps) {
                               {[...Array(5)].map((_, i) => (
                                 <Star
                                   key={i}
-                                  className={`w-4 h-4 ${
-                                    i < review.rating
+                                  className={`w-4 h-4 ${i < review.rating
                                       ? 'fill-yellow-400 text-yellow-400'
                                       : 'text-gray-300'
-                                  }`}
+                                    }`}
                                 />
                               ))}
                             </div>
@@ -242,7 +246,7 @@ export function VendorDetails({ vendor, onBack }: VendorDetailsProps) {
                   </Card>
                 )}
               </TabsContent>
-              
+
               <TabsContent value="about" className="mt-6">
                 <Card>
                   <CardContent className="pt-6 space-y-4">
