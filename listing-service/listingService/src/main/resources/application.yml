@@ -1,5 +1,5 @@
 server:
-  port: 8083 # Unique port for this microservice
+  port: 8093 # Unique port for this microservice
 
 # Eureka Client Configuration
 eureka:
