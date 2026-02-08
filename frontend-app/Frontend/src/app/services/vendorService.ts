@@ -43,7 +43,7 @@ export const vendorService = {
                 name: response.data.title,
                 category: response.data.category as Category,
                 description: response.data.description,
-                image: response.data.images?.[0]?.url || 'https://via.placeholder.com/400', // Fallback
+                image: response.data.imageUrls?.[0] || 'https://via.placeholder.com/400', // Fallback
                 rating: response.data.avgRating || 0,
                 reviewCount: 0, // Missing in backend
                 location: `${response.data.district}, ${response.data.city}`,
@@ -64,8 +64,8 @@ function transformListingToVendor(listing: any): Vendor {
         name: listing.title,
         category: listing.category as Category, // Ensure matches enum
         description: listing.description,
-        // ListingService returns 'images' list, not 'mainImageUrl'
-        image: listing.images?.[0]?.url || 'https://via.placeholder.com/400',
+        // ListingService returns 'imageUrls' list
+        image: listing.imageUrls?.[0] || 'https://via.placeholder.com/400',
         rating: listing.avgRating || 0,
         reviewCount: 0, // Not available 
         location: listing.city ? `${listing.district}, ${listing.city}` : listing.district,

@@ -30,21 +30,25 @@ public class ReviewServiceImpl implements ReviewService {
         review.setRating(request.getRating());
         review.setComment(request.getComment());
 
+        System.out.println("Saving review for listingId: " + request.getListingId());
         Review savedReview = reviewRepository.save(review);
+        System.out.println("Review saved successfully with ID: " + savedReview.getId());
 
-        Double avgRating = reviewRepository.calculateAverageRating(request.getListingId());
+        try {
+            Double avgRating = reviewRepository.calculateAverageRating(request.getListingId());
+            if (avgRating != null) {
+                Double roundedAvgRating = Math.round(avgRating * 100.0) / 100.0;
+                System.out.println("Calculated average rating: " + roundedAvgRating);
 
-        if (avgRating != null) {
-            Double roundedAvgRating = Math.round(avgRating * 100.0) / 100.0;
-
-            RatingUpdateRequest updateRequest = new RatingUpdateRequest(roundedAvgRating);
-
-            try {
+                RatingUpdateRequest updateRequest = new RatingUpdateRequest(roundedAvgRating);
                 listingClient.updateListingRating(request.getListingId(), updateRequest);
-            } catch (Exception e) {
-                System.err.println("Error syncing rating to Listing Service for ID " + request.getListingId() + ": "
-                        + e.getMessage());
+                System.out.println("Synced rating to Listing Service.");
             }
+        } catch (Exception e) {
+            // Log the error but DO NOT fail the transaction. The review is already saved.
+            System.err.println(
+                    "Error syncing rating to Listing Service for ID " + request.getListingId() + ": " + e.getMessage());
+            e.printStackTrace();
         }
 
         return savedReview;

@@ -47,6 +47,19 @@ public class ListingController {
     }
 
     /**
+     * DELETE /api/listings/{id}: Delete a listing.
+     * (Task: Add delete logic)
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteListing(
+            @PathVariable Long id,
+            @RequestHeader("X-Auth-User-Id") Long vendorId) {
+        System.out.println("DEBUG: deleteListing reached. ListingID: " + id + ", VendorID: " + vendorId);
+        listingService.deleteListing(id, vendorId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
      * GET /api/listings/{id}: Return full details (Listing + Category Specifics).
      * (Task 1.2) [cite_start][cite: 21]
      */
@@ -83,8 +96,9 @@ public class ListingController {
      */
     @PutMapping("/{id}/rating")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateListingRating(@PathVariable Long id, @RequestBody Double newAvgRating) {
-        listingService.updateListingRating(id, newAvgRating);
+    public void updateListingRating(@PathVariable Long id,
+            @RequestBody com.wedding.listingService.dto.RatingUpdateRequest request) {
+        listingService.updateListingRating(id, request.getNewAvgRating());
     }
 
     /**

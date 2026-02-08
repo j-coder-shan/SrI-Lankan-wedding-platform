@@ -1,14 +1,14 @@
 
 spring:
   application:
-    name: ReviewService
+    name: review-service
   cloud:
     config:
       uri: http://localhost:8888
       fail-fast: true
 
 server:
-  port: 8083 # A unique port for the review service
+  port: 8092 # A unique port for the review service
 
 eureka:
   client:

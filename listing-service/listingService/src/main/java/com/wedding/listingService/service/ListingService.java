@@ -27,6 +27,9 @@ public interface ListingService {
     // Bypass Search: Get all listings (optionally by category)
     List<ListingResponseDTO> getAllListings(String category);
 
+    // Task: Delete listing
+    void deleteListing(Long listingId, Long vendorId);
+
     // Upload image and return URL path
     String uploadImage(org.springframework.web.multipart.MultipartFile file);
 }

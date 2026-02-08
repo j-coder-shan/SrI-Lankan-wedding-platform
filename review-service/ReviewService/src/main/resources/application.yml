@@ -1,5 +1,5 @@
 server:
-  port: 8083 
+  port: 8092 
 
 # Eureka Client Configuration
 eureka:
@@ -15,7 +15,7 @@ spring:
     config:
       enabled: false
   application:
-    name: ReviewService
+    name: review-service
   datasource:
     url: jdbc:mysql://localhost:3307/review_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     username: root

@@ -78,6 +78,23 @@ public class ListingServiceImpl implements ListingService {
 
     @Override
     @Transactional
+    public void deleteListing(Long listingId, Long vendorId) {
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ListingNotFoundException("Listing not found with ID: " + listingId));
+
+        if (!listing.getVendorId().equals(vendorId)) {
+            throw new RuntimeException("Unauthorized delete attempt. Vendor ID mismatch.");
+        }
+
+        listingRepository.delete(listing);
+        System.out.println("DEBUG: Deleted listing ID: " + listingId);
+
+        // Publish to Kafka
+        publishListingEvent(listing, "DELETE");
+    }
+
+    @Override
+    @Transactional
     public void updateListingRating(Long listingId, Double newAvgRating) {
         // Task 3.2: Internal endpoint used by Review Service
         @SuppressWarnings("null")

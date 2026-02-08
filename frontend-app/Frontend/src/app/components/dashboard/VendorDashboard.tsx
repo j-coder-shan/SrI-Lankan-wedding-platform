@@ -12,11 +12,22 @@ import { Listing } from '../../types/listing';
 import { toast } from 'sonner';
 import { Plus, Image as ImageIcon, Trash2 } from 'lucide-react';
 import { ImageUpload } from '../ui/ImageUpload';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "../ui/alert-dialog";
 
 export function VendorDashboard() {
     const { user, logout } = useAuth();
     const [listings, setListings] = useState<Listing[]>([]);
     const [loading, setLoading] = useState(false);
+    const [deleteId, setDeleteId] = useState<number | null>(null);
 
     // Form State
     const [formData, setFormData] = useState({
@@ -110,6 +121,20 @@ export function VendorDashboard() {
             toast.error("Failed to create listing. Please try again.");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!deleteId) return;
+        try {
+            await listingService.deleteListing(deleteId);
+            toast.success('Listing deleted successfully');
+            fetchListings();
+        } catch (error) {
+            console.error('Failed to delete listing', error);
+            toast.error('Failed to delete listing');
+        } finally {
+            setDeleteId(null);
         }
     };
 
@@ -249,7 +274,7 @@ export function VendorDashboard() {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {listings.map((listing) => (
                                     <div key={listing.id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                                        <div className="h-48 bg-gray-200 relative">
+                                        <div className="h-48 bg-gray-200 relative group">
                                             {listing.imageUrls && listing.imageUrls.length > 0 ? (
                                                 <img src={listing.imageUrls[0]} alt={listing.title} className="w-full h-full object-cover" />
                                             ) : (
@@ -260,6 +285,16 @@ export function VendorDashboard() {
                                             <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded text-xs font-semibold">
                                                 {listing.category}
                                             </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setDeleteId(listing.id);
+                                                }}
+                                                className="absolute top-2 left-2 bg-red-500 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                                                title="Delete Listing"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
                                         </div>
                                         <div className="p-4">
                                             <h3 className="font-semibold text-lg mb-1">{listing.title}</h3>
@@ -275,6 +310,25 @@ export function VendorDashboard() {
                         )}
                     </CardContent>
                 </Card>
+
+                {/* Delete Confirmation Dialog */}
+                <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete the listing
+                                and remove its data from our servers.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                                Delete
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
 
             </div>
         </div>

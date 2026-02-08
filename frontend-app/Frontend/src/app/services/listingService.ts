@@ -8,6 +8,15 @@ export const listingService = {
         return response.data;
     },
 
+    createListing: async (listingData: any): Promise<void> => {
+        const response = await client.post('/api/listings', listingData);
+        return response.data;
+    },
+
+    deleteListing: async (id: number): Promise<void> => {
+        await client.delete(`/api/listings/${id}`);
+    },
+
     getAllListings: async (category?: string): Promise<Listing[]> => {
         // This might be for admin or public directory (Search Service handles public search usually)
         // But for direct listing service access:
@@ -24,7 +33,5 @@ export const listingService = {
         return response.data;
     },
 
-    createListing: async (data: any) => {
-        return client.post('/api/listings', data);
-    }
+    // createListing removed (duplicate)
 };

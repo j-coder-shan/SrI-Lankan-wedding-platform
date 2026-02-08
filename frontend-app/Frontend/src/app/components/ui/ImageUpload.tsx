@@ -52,11 +52,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImagesUploaded }) =>
 
                 // Use the ListingController upload endpoint
                 // Note: Ensure this matches the backend port and path
-                const response = await fetch('http://localhost:8080/api/listings/upload', {
+                // Use relative path to leverage Vite Proxy or same-origin in production
+                const response = await fetch('/api/listings/upload', {
                     method: 'POST',
                     headers: {
                         // 'Content-Type': 'multipart/form-data', // Do NOT set this manually, let fetch handle it
-                        // Add Auth Token if needed, though typically file upload might be open or need same token
+                        // Add Auth Token if needed
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
                     body: formData
