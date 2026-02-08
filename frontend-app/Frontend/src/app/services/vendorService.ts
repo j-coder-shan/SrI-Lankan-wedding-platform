@@ -11,18 +11,19 @@ export const vendorService = {
             params.category = category;
         }
 
-        // Map Price Range ($$) to Price Max (approximate logic)
-        if (priceRange && priceRange !== 'all') {
-            if (priceRange === '$$') params.userBudget = 100000;
-            else if (priceRange === '$$$') params.userBudget = 250000;
-            else if (priceRange === '$$$$') params.userBudget = 500000;
-        }
-
         try {
-            const response = await apiClient.get<SearchListing[]>('/api/search', { params });
+            // Bypass Search Service -> Use Listing Service directly
+            const response = await apiClient.get<any[]>('/api/listings', { params });
 
             // Transform Backend Data to Frontend Model
-            return response.data.map(transformListingToVendor);
+            let vendors = response.data.map(transformListingToVendor);
+
+            // Client-side filtering for Price Range (since ListingService only filters by category)
+            if (priceRange && priceRange !== 'all') {
+                vendors = vendors.filter(v => v.priceRange === priceRange);
+            }
+
+            return vendors;
         } catch (error) {
             console.error("Error fetching vendors:", error);
             throw error;
@@ -56,17 +57,18 @@ export const vendorService = {
     }
 };
 
-// Helper: Transform SearchListing -> Vendor
-function transformListingToVendor(listing: SearchListing): Vendor {
+// Helper: Transform ListingResponseDTO -> Vendor
+function transformListingToVendor(listing: any): Vendor {
     return {
         id: listing.id,
         name: listing.title,
-        category: listing.category.toLowerCase() as Category, // Ensure lowercase matches enum
+        category: listing.category as Category, // Ensure matches enum
         description: listing.description,
-        image: listing.mainImageUrl || 'https://via.placeholder.com/400',
+        // ListingService returns 'images' list, not 'mainImageUrl'
+        image: listing.images?.[0]?.url || 'https://via.placeholder.com/400',
         rating: listing.avgRating || 0,
-        reviewCount: 0, // Not available in SearchListing
-        location: listing.district, // Or combine with city if available
+        reviewCount: 0, // Not available 
+        location: listing.city ? `${listing.district}, ${listing.city}` : listing.district,
         priceRange: mapPriceToRange(listing.priceMin, listing.priceMax),
         featured: false // Not available
     };

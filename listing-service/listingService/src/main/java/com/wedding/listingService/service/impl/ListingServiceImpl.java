@@ -152,4 +152,74 @@ public class ListingServiceImpl implements ListingService {
                 .map(listingMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<ListingResponseDTO> getAllListings(String category) {
+        List<Listing> listings;
+        if (category != null && !category.isEmpty()) {
+            try {
+                System.out.println("DEBUG: getAllListings called with category: " + category);
+                String normalizedCat = category.trim().toUpperCase();
+                if ("SALOON".equals(normalizedCat)) {
+                    normalizedCat = "SALON";
+                } else if ("PHOTOGRAPHY".equals(normalizedCat)) {
+                    normalizedCat = "PHOTOGRAPHER";
+                } else if ("DRESSES".equals(normalizedCat)) {
+                    normalizedCat = "DRESS";
+                }
+                com.wedding.listingService.enums.Category catEnum = com.wedding.listingService.enums.Category
+                        .valueOf(normalizedCat);
+                System.out.println("DEBUG: Converted to Enum: " + catEnum.name());
+                try {
+                    listings = listingRepository.findByCategory(catEnum.name());
+                    System.out.println("DEBUG: Found " + listings.size() + " listings for category: " + catEnum.name());
+                } catch (Exception e) {
+                    System.err.println("ERROR_FETCHING_LISTINGS: " + e.getMessage());
+                    e.printStackTrace();
+                    throw e;
+                }
+            } catch (IllegalArgumentException e) {
+                // Invalid category
+                System.out.println("DEBUG: Invalid category: " + category);
+                return List.of();
+            }
+        } else {
+            System.out.println("DEBUG: fetching all listings (no category)");
+            listings = listingRepository.findAll();
+        }
+
+        System.out.println("DEBUG: Raw listings found: " + listings.size());
+
+        List<ListingResponseDTO> result = listings.stream()
+                .filter(l -> {
+                    boolean isPublished = l.getStatus() == ListingStatus.PUBLISHED;
+                    if (!isPublished)
+                        System.out.println("DEBUG: Listing " + l.getId() + " skipped (Status: " + l.getStatus() + ")");
+                    return isPublished;
+                })
+                .map(listingMapper::toResponseDTO)
+                .collect(Collectors.toList());
+
+        System.out.println("DEBUG: Returning " + result.size() + " published listings");
+        return result;
+    }
+
+    @Override
+    public String uploadImage(org.springframework.web.multipart.MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new RuntimeException("Failed to store empty file.");
+        }
+        try {
+            String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            java.nio.file.Path rootLocation = java.nio.file.Paths.get("uploads");
+            if (!java.nio.file.Files.exists(rootLocation)) {
+                java.nio.file.Files.createDirectories(rootLocation);
+            }
+            java.nio.file.Files.copy(file.getInputStream(), rootLocation.resolve(filename));
+            // Return relative path matching WebConfig
+            return "/api/listings/uploads/" + filename;
+        } catch (java.io.IOException e) {
+            throw new RuntimeException("Failed to store file.", e);
+        }
+    }
 }

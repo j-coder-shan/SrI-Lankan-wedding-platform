@@ -28,10 +28,12 @@ public class CustomAuthFilter extends AbstractGatewayFilterFactory<CustomAuthFil
             // 1. Check if the route requires security
             if (validator.isSecured.test(exchange.getRequest())) {
 
-                // 2. Check for Authorization header
+                System.out.println("DEBUG: CustomAuthFilter processing request: " + exchange.getRequest().getURI());
+
                 // 2. Check for Authorization header
                 List<String> authHeaders = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
                 if (authHeaders == null || authHeaders.isEmpty()) {
+                    System.out.println("DEBUG: Missing Authorization Header");
                     exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                     return exchange.getResponse().setComplete();
                 }
@@ -40,6 +42,8 @@ public class CustomAuthFilter extends AbstractGatewayFilterFactory<CustomAuthFil
                 String authHeader = authHeaders.get(0);
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
                     authHeader = authHeader.substring(7);
+                } else {
+                    System.out.println("DEBUG: Invalid Authorization Header Format: " + authHeader);
                 }
 
                 // 4. Validate Token & Inject Headers
@@ -52,22 +56,22 @@ public class CustomAuthFilter extends AbstractGatewayFilterFactory<CustomAuthFil
 
                     System.out.println("DEBUG: Token Validated. UserId: " + userId + ", Role: " + role);
 
-                    // Use Decorator to safely modify headers (bypassing ReadOnlyHttpHeaders issue)
+                    // Standard way to mutate headers in Spring Cloud Gateway
+                    // Standard way to mutate headers in Spring Cloud Gateway
+                    // Standard way to mutate headers in Spring Cloud Gateway
                     ServerHttpRequest request = exchange.getRequest();
                     ServerHttpRequestDecorator decoratedRequest = new ServerHttpRequestDecorator(request) {
                         @Override
                         public HttpHeaders getHeaders() {
                             HttpHeaders headers = new HttpHeaders();
                             headers.putAll(super.getHeaders());
-                            if (userId != null)
-                                headers.set("X-Auth-User-Id", userId);
-                            if (role != null)
-                                headers.set("X-Auth-User-Role", role);
+                            headers.add("X-Auth-User-Id", userId);
+                            headers.add("X-Auth-User-Role", role);
                             return headers;
                         }
                     };
 
-                    exchange = exchange.mutate().request(decoratedRequest).build();
+                    return chain.filter(exchange.mutate().request(decoratedRequest).build());
 
                 } catch (Exception e) {
                     System.out

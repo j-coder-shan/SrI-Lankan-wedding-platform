@@ -14,22 +14,9 @@ import java.util.List;
 public class ListingController {
 
     private final ListingService listingService;
-    private final com.wedding.listingService.service.FileStorageService fileStorageService;
 
-    public ListingController(ListingService listingService,
-            com.wedding.listingService.service.FileStorageService fileStorageService) {
+    public ListingController(ListingService listingService) {
         this.listingService = listingService;
-        this.fileStorageService = fileStorageService;
-    }
-
-    // Task 2.5: Image Upload Endpoint
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(
-            @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
-        String fileName = fileStorageService.storeFile(file);
-        // Return the accessible URL via API Gateway (Port 8080)
-        String fileUrl = "http://localhost:8080/api/listings/uploads/" + fileName;
-        return ResponseEntity.ok(fileUrl);
     }
 
     /**
@@ -40,7 +27,7 @@ public class ListingController {
     public ResponseEntity<Void> createListing(
             @Valid @RequestBody ListingRequestDTO requestDTO,
             @RequestHeader("X-Auth-User-Id") Long vendorId) {
-
+        System.out.println("DEBUG: createListing reached. VendorID: " + vendorId);
         listingService.createListing(requestDTO, vendorId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -75,7 +62,18 @@ public class ListingController {
      */
     @GetMapping("/vendor/me")
     public ResponseEntity<List<ListingResponseDTO>> getVendorListings(@RequestHeader("X-Auth-User-Id") Long vendorId) {
+        System.out.println("DEBUG: getVendorListings reached. VendorID: " + vendorId);
         List<ListingResponseDTO> listings = listingService.getVendorListings(vendorId);
+        return ResponseEntity.ok(listings);
+    }
+
+    /**
+     * GET /api/listings: Return all listings (Bypass Search Service)
+     */
+    @GetMapping
+    public ResponseEntity<List<ListingResponseDTO>> getAllListings(
+            @RequestParam(required = false) String category) {
+        List<ListingResponseDTO> listings = listingService.getAllListings(category);
         return ResponseEntity.ok(listings);
     }
 
@@ -87,5 +85,15 @@ public class ListingController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateListingRating(@PathVariable Long id, @RequestBody Double newAvgRating) {
         listingService.updateListingRating(id, newAvgRating);
+    }
+
+    /**
+     * POST /api/listings/upload: Upload image file.
+     */
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadImage(
+            @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        String imageUrl = listingService.uploadImage(file);
+        return ResponseEntity.ok(imageUrl);
     }
 }

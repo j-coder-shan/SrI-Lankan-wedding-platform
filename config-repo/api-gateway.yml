@@ -26,11 +26,24 @@ spring:
             - Path=/api/auth/**
           filters:
             - StripPrefix=1
-        - id: listing-service-public
+        - id: listing-service-vendor-me
+          uri: lb://LISTING-SERVICE
+          predicates:
+            - Path=/api/listings/vendor/me
+            - Method=GET
+          filters:
+            - name: CustomAuthFilter
+        - id: listing-service-uploads
           uri: lb://LISTING-SERVICE
           predicates:
             - Path=/api/listings/uploads/**
           # No Auth Filter for static images
+        - id: listing-service-public-get
+          uri: lb://LISTING-SERVICE
+          predicates:
+            - Path=/api/listings/**
+            - Method=GET
+          # Public GET access
         - id: listing-service
           uri: lb://LISTING-SERVICE
           predicates:

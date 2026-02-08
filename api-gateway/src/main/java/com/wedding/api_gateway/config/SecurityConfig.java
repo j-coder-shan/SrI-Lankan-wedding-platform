@@ -12,18 +12,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        // Use method references where appropriate to satisfy IDE suggestions
         http
-            .csrf(ServerHttpSecurity.CsrfSpec::disable)
-            .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
-            .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-            .authorizeExchange(exchanges -> exchanges
-                // Allow public access to auth endpoints and actuator
-                .pathMatchers("/api/auth/**", "/actuator/**", "/eureka/**").permitAll()
-                // Let gateway filters handle auth for other routes (or allow all during development)
-                .anyExchange().permitAll()
-            );
-
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .cors(ServerHttpSecurity.CorsSpec::disable) // letting Gateway Global CORS handle it or custom config
+                .authorizeExchange(exchanges -> exchanges
+                        .anyExchange().permitAll());
         return http.build();
     }
 }

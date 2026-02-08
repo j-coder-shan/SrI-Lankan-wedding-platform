@@ -34,9 +34,16 @@ export function VendorDashboard() {
     const fetchListings = async () => {
         try {
             const data = await listingService.getVendorListings();
-            setListings(data);
+            if (Array.isArray(data)) {
+                setListings(data);
+            } else {
+                console.error("Received invalid listings data:", data);
+                setListings([]);
+                toast.error("Failed to load listings: Invalid response format.");
+            }
         } catch (error) {
             console.error("Failed to fetch listings", error);
+            // toast.error("Failed to fetch listings");
         }
     };
 
@@ -161,9 +168,8 @@ export function VendorDashboard() {
                                         <SelectContent>
                                             <SelectItem value="VENUE">Venue</SelectItem>
                                             <SelectItem value="PHOTOGRAPHY">Photography</SelectItem>
-                                            <SelectItem value="CATERING">Catering</SelectItem>
-                                            <SelectItem value="DECOR">Decor</SelectItem>
-                                            <SelectItem value="MUSIC">Music</SelectItem>
+                                            <SelectItem value="SALON">Salon</SelectItem>
+                                            <SelectItem value="DRESSES">Dresses</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>

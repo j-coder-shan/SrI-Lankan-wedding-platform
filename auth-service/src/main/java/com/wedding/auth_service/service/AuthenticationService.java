@@ -59,7 +59,9 @@ public class AuthenticationService {
                                                 request.getEmail(),
                                                 request.getPassword()));
 
-                var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+                var user = userRepository.findByEmail(request.getEmail())
+                                .orElseThrow(() -> new org.springframework.security.core.userdetails.UsernameNotFoundException(
+                                                "User not found with email: " + request.getEmail()));
                 var jwtToken = jwtService
                                 .generateToken(java.util.Map.of("userId", user.getId(), "role", user.getRole()), user);
                 var refreshToken = createRefreshToken(user); // Rotate refresh token on login
