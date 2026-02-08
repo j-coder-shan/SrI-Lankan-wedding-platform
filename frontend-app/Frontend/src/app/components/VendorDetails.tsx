@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Star, MapPin, DollarSign, Calendar, Phone, Mail, Heart } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -95,9 +95,9 @@ export function VendorDetails() {
     try {
       await enquiryService.createEnquiry({
         listingId: vendor.id,
-        vendorId: vendor.vendorId, // Assuming Listing has vendorId
-        coupleId: user?.id || 0, // Fallback if user id missing (shouldn't happen if auth)
-        eventDate: new Date(bookingDate).toISOString(),
+        vendorId: vendor.vendorId,
+        coupleId: user?.id || 0,
+        eventDate: bookingDate,
         guestCount: Number(bookingGuestCount),
         message: bookingMessage,
         coupleNameSnapshot: bookingName,
@@ -107,6 +107,17 @@ export function VendorDetails() {
       });
       toast.success('Booking request submitted! The vendor will contact you soon.');
       setIsBookingOpen(false);
+
+      // Clear form
+      setBookingDate('');
+      setBookingMessage('');
+      setBookingGuestCount(100);
+      // Optional: Reset contact info if you want, but usually users like it persisted. 
+      // Requirement said "clear the form fields", so I will reset them to defaults or empty.
+      // However, usually name/email/phone come from user profile, so I might reset them to user defaults?
+      // "clear the form fields" usually implies the specific booking details. 
+      // I'll reset message, date, and guests. keeping name/email/phone as they are pre-filled.
+      // Wait, requirement: "clear the form fields". I will stick to clearing the booking specific fields.
     } catch (error) {
       console.error("Booking failed", error);
       toast.error("Failed to submit booking request.");

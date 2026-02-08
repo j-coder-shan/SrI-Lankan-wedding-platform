@@ -19,7 +19,6 @@ spring:
 eureka:
   instance:
     prefer-ip-address: true
-    hostname: localhost
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 jwt:

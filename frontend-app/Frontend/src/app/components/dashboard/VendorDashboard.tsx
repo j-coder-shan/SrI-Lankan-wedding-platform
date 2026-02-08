@@ -413,12 +413,51 @@ export function VendorDashboard() {
                                             </div>
                                             <div className="flex flex-col items-end gap-2">
                                                 <span className={`px-2 py-1 rounded text-xs font-semibold
-                                                    ${enquiry.status === 'ACCEPTED' ? 'bg-green-100 text-green-800' :
-                                                        enquiry.status === 'DECLINED' ? 'bg-red-100 text-red-800' :
+                                                    ${enquiry.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
+                                                        enquiry.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
                                                             'bg-yellow-100 text-yellow-800'}`}>
-                                                    {enquiry.status}
+                                                    {enquiry.status === 'APPROVED' ? 'ACCEPTED' :
+                                                        enquiry.status === 'REJECTED' ? 'DECLINED' : enquiry.status}
                                                 </span>
-                                                {/* Future: Add Accept/Decline buttons here */}
+
+                                                {/* Action Buttons for PENDING status */}
+                                                {enquiry.status === 'PENDING' && (
+                                                    <div className="flex gap-2 mt-2">
+                                                        <Button
+                                                            size="sm"
+                                                            className="bg-green-600 hover:bg-green-700 h-8"
+                                                            onClick={async () => {
+                                                                try {
+                                                                    await enquiryService.updateStatus(enquiry.id, 'APPROVED');
+                                                                    toast.success("Enquiry Accepted");
+                                                                    fetchEnquiries(); // Refresh list
+                                                                } catch (error) {
+                                                                    console.error("Update failed", error);
+                                                                    toast.error("Failed to update status");
+                                                                }
+                                                            }}
+                                                        >
+                                                            Accept
+                                                        </Button>
+                                                        <Button
+                                                            size="sm"
+                                                            variant="destructive"
+                                                            className="h-8"
+                                                            onClick={async () => {
+                                                                try {
+                                                                    await enquiryService.updateStatus(enquiry.id, 'REJECTED');
+                                                                    toast.info("Enquiry Declined");
+                                                                    fetchEnquiries(); // Refresh list
+                                                                } catch (error) {
+                                                                    console.error("Update failed", error);
+                                                                    toast.error("Failed to update status");
+                                                                }
+                                                            }}
+                                                        >
+                                                            Decline
+                                                        </Button>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </CardContent>

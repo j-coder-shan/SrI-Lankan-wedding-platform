@@ -21,7 +21,11 @@ export const enquiryService = {
     },
 
     // Vendor updates status
-    updateStatus: async (id: number, status: 'ACCEPTED' | 'DECLINED'): Promise<void> => {
-        await client.patch(`/api/enquiries/${id}/status`, { status });
+    updateStatus: async (id: number, status: 'APPROVED' | 'REJECTED'): Promise<void> => {
+        // Backend expects @RequestParam for status, so we send it in the URL query string
+        // PATCH /api/enquiries/{id}/status?status=APPROVED
+        await client.patch(`/api/enquiries/${id}/status`, null, {
+            params: { status }
+        });
     }
 };
