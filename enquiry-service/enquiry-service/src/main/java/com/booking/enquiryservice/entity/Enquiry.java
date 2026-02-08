@@ -27,6 +27,7 @@ public class Enquiry {
 
     // --- Snapshots (Avoid N+1 calls) ---
     private String coupleNameSnapshot;
+    private String coupleEmailSnapshot;
     private String couplePhoneSnapshot;
     private String listingTitleSnapshot;
 

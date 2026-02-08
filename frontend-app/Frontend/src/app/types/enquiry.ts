@@ -8,6 +8,11 @@ export interface Enquiry {
     status: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'BOOKED';
     finalPrice?: number;
     message?: string;
+    // Snapshots
+    coupleNameSnapshot?: string;
+    coupleEmailSnapshot?: string;
+    couplePhoneSnapshot?: string;
+    listingTitleSnapshot?: string;
 }
 
 export interface EnquiryRequest {
@@ -17,8 +22,9 @@ export interface EnquiryRequest {
     eventDate: string;
     guestCount: number;
     message?: string;
-    // We can also send couple's name/email/phone as metadata if not strictly from user table
-    contactName?: string;
-    contactEmail?: string;
-    contactPhone?: string;
+    // Snapshots to ensure backend saves them
+    coupleNameSnapshot?: string;
+    coupleEmailSnapshot?: string;
+    couplePhoneSnapshot?: string;
+    listingTitleSnapshot?: string;
 }

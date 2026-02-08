@@ -22,11 +22,21 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "../ui/alert-dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "../ui/dialog";
+import { enquiryService } from '../../services/enquiryService';
+import { Enquiry } from '../../types/enquiry';
 
 export function VendorDashboard() {
     const { user, logout } = useAuth();
     const [listings, setListings] = useState<Listing[]>([]);
+    const [enquiries, setEnquiries] = useState<Enquiry[]>([]); // State for enquiries
     const [loading, setLoading] = useState(false);
+    const [isEnquiriesOpen, setIsEnquiriesOpen] = useState(false); // Modal state
     const [deleteId, setDeleteId] = useState<number | null>(null);
 
     // Form State
@@ -58,6 +68,32 @@ export function VendorDashboard() {
         }
     };
 
+    const fetchEnquiries = async () => {
+        try {
+            const data = await enquiryService.getVendorEnquiries();
+            // Check if data has content content (since Page<Enquiry> returns { content: [...] })
+            // Or if it returns direct array. The service says Enquiry[], but let's be safe.
+            // Based earlier service file it returns response.data which is Enquiry[].
+            // But Controller returns Page<Enquiry> (Task 1.3 View).
+            // Page JSON structure: { content: [], pageable: ... }
+            // Let's assume for a moment the service type definition is slightly off or the controller return type wraps it.
+            // If the controller returns Page, response.data will be the Page object.
+            // Let's handle both array and page structure just in case, or fix the service.
+            // Actually, checking EnquiryController: getVendorEnquiries returns Page<Enquiry>.
+            // So response.data is { content: [...] }.
+            // We need to fix the service or handle it here. Let's fix it here for now by checking property.
+            if (data && (data as any).content) {
+                setEnquiries((data as any).content);
+            } else if (Array.isArray(data)) {
+                setEnquiries(data);
+            } else {
+                setEnquiries([]);
+            }
+        } catch (error) {
+            console.error("Failed to fetch enquiries", error);
+        }
+    };
+
     useEffect(() => {
         // Debug/Validation Check for Token
         const token = localStorage.getItem('token');
@@ -79,6 +115,7 @@ export function VendorDashboard() {
             }
         }
         fetchListings();
+        fetchEnquiries();
     }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -158,9 +195,17 @@ export function VendorDashboard() {
                             <h3 className="font-semibold text-blue-900">Analytics</h3>
                             <p className="text-sm text-blue-700">View your performance stats</p>
                         </div>
-                        <div className="p-4 border rounded-lg bg-green-50">
-                            <h3 className="font-semibold text-green-900">Enquiries</h3>
-                            <p className="text-sm text-green-700">Manage booking requests</p>
+                        <div
+                            className="p-4 border rounded-lg bg-green-50 cursor-pointer hover:bg-green-100 transition-colors"
+                            onClick={() => setIsEnquiriesOpen(true)}
+                        >
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h3 className="font-semibold text-green-900">Enquiries</h3>
+                                    <p className="text-sm text-green-700">Manage booking requests</p>
+                                </div>
+                                <span className="text-2xl font-bold text-green-800">{enquiries.length}</span>
+                            </div>
                         </div>
                         <div className="p-4 border rounded-lg bg-purple-50">
                             <h3 className="font-semibold text-purple-900">Invoices</h3>
@@ -331,6 +376,59 @@ export function VendorDashboard() {
                 </AlertDialog>
 
             </div>
+
+            {/* Enquiries Modal */}
+            <Dialog open={isEnquiriesOpen} onOpenChange={setIsEnquiriesOpen}>
+                <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Booking Enquiries ({enquiries.length})</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        {enquiries.length === 0 ? (
+                            <p className="text-center text-gray-500 py-8">No enquiries yet.</p>
+                        ) : (
+                            enquiries.map((enquiry) => (
+                                <Card key={enquiry.id}>
+                                    <CardContent className="p-4">
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <h4 className="font-semibold text-lg">
+                                                    {enquiry.listingTitleSnapshot || `Listing #${enquiry.listingId}`}
+                                                </h4>
+                                                <p className="text-sm text-gray-500 mb-2">
+                                                    Event Date: {new Date(enquiry.eventDate).toLocaleDateString()}
+                                                </p>
+                                                <p className="text-sm"><strong>Guest Count:</strong> {enquiry.guestCount}</p>
+                                                <div className="mt-2 text-sm text-gray-700">
+                                                    <p><strong>Contact:</strong> {enquiry.coupleNameSnapshot || 'N/A'}</p>
+                                                    <p><strong>Email:</strong> {enquiry.coupleEmailSnapshot || 'N/A'}</p>
+                                                    <p><strong>Phone:</strong> {enquiry.couplePhoneSnapshot || 'N/A'}</p>
+                                                </div>
+                                                {enquiry.message && (
+                                                    <div className="mt-2 text-sm bg-gray-50 p-2 rounded">
+                                                        <p className="font-semibold text-xs text-gray-500 uppercase">Message</p>
+                                                        <p>{enquiry.message}</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="flex flex-col items-end gap-2">
+                                                <span className={`px-2 py-1 rounded text-xs font-semibold
+                                                    ${enquiry.status === 'ACCEPTED' ? 'bg-green-100 text-green-800' :
+                                                        enquiry.status === 'DECLINED' ? 'bg-red-100 text-red-800' :
+                                                            'bg-yellow-100 text-yellow-800'}`}>
+                                                    {enquiry.status}
+                                                </span>
+                                                {/* Future: Add Accept/Decline buttons here */}
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))
+                        )}
+                    </div>
+                </DialogContent>
+            </Dialog>
+
         </div>
     );
 }

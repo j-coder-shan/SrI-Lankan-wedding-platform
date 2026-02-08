@@ -100,9 +100,10 @@ export function VendorDetails() {
         eventDate: new Date(bookingDate).toISOString(),
         guestCount: Number(bookingGuestCount),
         message: bookingMessage,
-        contactName: bookingName,
-        contactEmail: bookingEmail,
-        contactPhone: bookingPhone
+        coupleNameSnapshot: bookingName,
+        coupleEmailSnapshot: bookingEmail,
+        couplePhoneSnapshot: bookingPhone,
+        listingTitleSnapshot: vendor.title
       });
       toast.success('Booking request submitted! The vendor will contact you soon.');
       setIsBookingOpen(false);
