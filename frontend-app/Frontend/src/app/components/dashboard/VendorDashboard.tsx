@@ -167,9 +167,9 @@ export function VendorDashboard() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="VENUE">Venue</SelectItem>
-                                            <SelectItem value="PHOTOGRAPHY">Photography</SelectItem>
+                                            <SelectItem value="PHOTOGRAPHER">Photography</SelectItem>
                                             <SelectItem value="SALON">Salon</SelectItem>
-                                            <SelectItem value="DRESSES">Dresses</SelectItem>
+                                            <SelectItem value="DRESS">Dresses</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>

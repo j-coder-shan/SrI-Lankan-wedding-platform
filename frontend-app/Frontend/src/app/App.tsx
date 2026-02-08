@@ -14,7 +14,7 @@ import { VendorDetails } from './components/VendorDetails';
 import { AboutPage } from './components/AboutPage';
 import { ContactPage } from './components/ContactPage';
 
-export type Category = 'dress' | 'venue' | 'saloon' | 'photographer';
+export type Category = 'dress' | 'venue' | 'salon' | 'photographer';
 
 export interface Vendor {
   id: number;

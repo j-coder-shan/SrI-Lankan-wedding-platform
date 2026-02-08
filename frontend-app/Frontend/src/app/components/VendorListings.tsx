@@ -24,7 +24,7 @@ export function VendorListings() {
   const categoryTitles: Record<Category, string> = {
     dress: 'Wedding Dresses & Attire',
     venue: 'Wedding Venues',
-    saloon: 'Beauty Salons',
+    salon: 'Beauty Salons',
     photographer: 'Wedding Photographers'
   };
 

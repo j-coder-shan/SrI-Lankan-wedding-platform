@@ -8,10 +8,14 @@ export const listingService = {
         return response.data;
     },
 
-    getAllListings: async (): Promise<Listing[]> => {
+    getAllListings: async (category?: string): Promise<Listing[]> => {
         // This might be for admin or public directory (Search Service handles public search usually)
         // But for direct listing service access:
-        const response = await client.get('/api/listings');
+        const params: any = {};
+        if (category) {
+            params.category = category;
+        }
+        const response = await client.get('/api/listings', { params });
         return response.data;
     },
 
