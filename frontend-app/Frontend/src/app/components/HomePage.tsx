@@ -1,5 +1,4 @@
-import React from 'react';
-
+import { HeartHandshake, ShieldCheck, Sparkles } from 'lucide-react';
 import { CategoryCard } from './CategoryCard';
 import { FeaturedVendors } from './FeaturedVendors';
 import { Category } from '../App';
@@ -27,15 +26,41 @@ export function HomePage() {
               Your Dream Wedding
               <span className="text-rose-600"> Starts Here</span>
             </h1>
-            <p className="text-xl text-gray-700 mb-8">
+            <p className="text-xl text-gray-700 mb-12">
               Discover the perfect vendors for your special day. From stunning venues to exquisite dresses, we've got everything you need.
             </p>
-            <p className="text-lg text-gray-600 mb-6">
-              We connect you with the finest wedding professionals in Sri Lanka, ensuring your celebration is nothing short of magical. Whether you're planning an intimate gathering or a grand royal wedding, our platform simplifies the planning process.
-            </p>
-            <p className="text-lg text-gray-600 mb-8">
-              Browse through verified reviews, view portfolios, and connect directly with vendors who match your style and budget. Let us help you turn your vision into reality, stress-free.
-            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="p-6 bg-white/40 backdrop-blur-md rounded-2xl shadow-sm border border-white/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-6 h-6 text-rose-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Magical Moments</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  We connect you with the finest professionals to ensure your celebration is essentially magical.
+                </p>
+              </div>
+
+              <div className="p-6 bg-white/40 backdrop-blur-md rounded-2xl shadow-sm border border-white/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <ShieldCheck className="w-6 h-6 text-purple-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Verified Vendors</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Browse through verified reviews and portfolios to find vendors that match your style.
+                </p>
+              </div>
+
+              <div className="p-6 bg-white/40 backdrop-blur-md rounded-2xl shadow-sm border border-white/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <HeartHandshake className="w-6 h-6 text-pink-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Direct Connection</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Connect directly with vendors stress-free and turn your vision into reality.
+                </p>
+              </div>
+            </div>
 
 
           </div>
