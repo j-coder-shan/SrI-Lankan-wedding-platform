@@ -10,6 +10,7 @@ export const authService = {
         if (response.data.accessToken) {
             localStorage.setItem(TOKEN_KEY, response.data.accessToken);
             // Backend returns minimal user info in response, store it
+            // if user is not logged in, set the user state to null
             const user: User = {
                 id: response.data.userId,
                 email: credentials.email, // Backend doesn't return email in login response unfortunately, assume context
