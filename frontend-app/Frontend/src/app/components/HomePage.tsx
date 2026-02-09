@@ -31,34 +31,67 @@ export function HomePage() {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="p-6 bg-white/40 backdrop-blur-md rounded-2xl shadow-sm border border-white/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="w-6 h-6 text-rose-600" />
+              <div className="group bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                <div className="h-48 overflow-hidden">
+                  <img
+                    src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=800"
+                    alt="Magical wedding moment"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Magical Moments</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  We connect you with the finest professionals to ensure your celebration is essentially magical.
-                </p>
+                <div className="p-6 relative">
+                  <div className="absolute -top-6 left-6 w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center border-4 border-white">
+                    <Sparkles className="w-6 h-6 text-rose-600" />
+                  </div>
+                  <div className="mt-4">
+                    <h3 className="font-semibold text-xl text-gray-900 mb-2">Magical Moments</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      We connect you with the finest professionals to ensure your celebration is essentially magical.
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <div className="p-6 bg-white/40 backdrop-blur-md rounded-2xl shadow-sm border border-white/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <ShieldCheck className="w-6 h-6 text-purple-600" />
+              <div className="group bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                <div className="h-48 overflow-hidden">
+                  <img
+                    src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800"
+                    alt="Verified wedding vendor"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Verified Vendors</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Browse through verified reviews and portfolios to find vendors that match your style.
-                </p>
+                <div className="p-6 relative">
+                  <div className="absolute -top-6 left-6 w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center border-4 border-white">
+                    <ShieldCheck className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div className="mt-4">
+                    <h3 className="font-semibold text-xl text-gray-900 mb-2">Verified Vendors</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      Browse through verified reviews and portfolios to find vendors that match your style.
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <div className="p-6 bg-white/40 backdrop-blur-md rounded-2xl shadow-sm border border-white/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <HeartHandshake className="w-6 h-6 text-pink-600" />
+              <div className="group bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                <div className="h-48 overflow-hidden">
+                  <img
+                    src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=800"
+                    alt="Direct connection"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Direct Connection</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Connect directly with vendors stress-free and turn your vision into reality.
-                </p>
+                <div className="p-6 relative">
+                  <div className="absolute -top-6 left-6 w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center border-4 border-white">
+                    <HeartHandshake className="w-6 h-6 text-pink-600" />
+                  </div>
+                  <div className="mt-4">
+                    <h3 className="font-semibold text-xl text-gray-900 mb-2">Direct Connection</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      Connect directly with vendors stress-free and turn your vision into reality.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
