@@ -55,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     // Handle logout
+    // if user is logged in, set the user state to null
     const logout = () => {
         authService.logout();
         setUser(null);
