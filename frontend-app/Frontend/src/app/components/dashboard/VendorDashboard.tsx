@@ -30,14 +30,19 @@ import {
 } from "../ui/dialog";
 import { enquiryService } from '../../services/enquiryService';
 import { Enquiry } from '../../types/enquiry';
+import chatService from '../../services/chatService';
+import { VendorMessageResponse } from '../../types/message';
 
 export function VendorDashboard() {
     const { user, logout } = useAuth();
     const [listings, setListings] = useState<Listing[]>([]);
     const [enquiries, setEnquiries] = useState<Enquiry[]>([]); // State for enquiries
+    const [messages, setMessages] = useState<VendorMessageResponse[]>([]); // State for messages
     const [loading, setLoading] = useState(false);
     const [isEnquiriesOpen, setIsEnquiriesOpen] = useState(false); // Modal state
+    const [isMessagesOpen, setIsMessagesOpen] = useState(false); // Messages modal state
     const [deleteId, setDeleteId] = useState<number | null>(null);
+    const [messageToDelete, setMessageToDelete] = useState<string | null>(null); // Message ID to delete
 
     // Form State
     const [formData, setFormData] = useState({
@@ -116,7 +121,31 @@ export function VendorDashboard() {
         }
         fetchListings();
         fetchEnquiries();
+        fetchMessages();
     }, []);
+
+    const fetchMessages = async () => {
+        try {
+            const data = await chatService.getVendorMessages();
+            setMessages(data);
+        } catch (error) {
+            console.error("Failed to fetch messages", error);
+        }
+    };
+
+    const handleDeleteMessage = async () => {
+        if (!messageToDelete) return;
+
+        try {
+            await chatService.deleteMessage(messageToDelete);
+            toast.success('Message deleted successfully');
+            fetchMessages(); // Refresh the list
+            setMessageToDelete(null); // Close the dialog
+        } catch (error) {
+            console.error('Failed to delete message', error);
+            toast.error('Failed to delete message');
+        }
+    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -207,9 +236,17 @@ export function VendorDashboard() {
                                 <span className="text-2xl font-bold text-green-800">{enquiries.length}</span>
                             </div>
                         </div>
-                        <div className="p-4 border rounded-lg bg-purple-50">
-                            <h3 className="font-semibold text-purple-900">Invoices</h3>
-                            <p className="text-sm text-purple-700">Track payments</p>
+                        <div
+                            className="p-4 border rounded-lg bg-purple-50 cursor-pointer hover:bg-purple-100 transition-colors"
+                            onClick={() => setIsMessagesOpen(true)}
+                        >
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h3 className="font-semibold text-purple-900">Messages</h3>
+                                    <p className="text-sm text-purple-700">View customer messages</p>
+                                </div>
+                                <span className="text-2xl font-bold text-purple-800">{messages.length}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -413,11 +450,10 @@ export function VendorDashboard() {
                                             </div>
                                             <div className="flex flex-col items-end gap-2">
                                                 <span className={`px-2 py-1 rounded text-xs font-semibold
-                                                    ${enquiry.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
-                                                        enquiry.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
+                                                    ${enquiry.status === 'ACCEPTED' ? 'bg-green-100 text-green-800' :
+                                                        enquiry.status === 'DECLINED' ? 'bg-red-100 text-red-800' :
                                                             'bg-yellow-100 text-yellow-800'}`}>
-                                                    {enquiry.status === 'APPROVED' ? 'ACCEPTED' :
-                                                        enquiry.status === 'REJECTED' ? 'DECLINED' : enquiry.status}
+                                                    {enquiry.status}
                                                 </span>
 
                                                 {/* Action Buttons for PENDING status */}
@@ -467,6 +503,86 @@ export function VendorDashboard() {
                     </div>
                 </DialogContent>
             </Dialog>
+
+            {/* Messages Dialog */}
+            <Dialog open={isMessagesOpen} onOpenChange={setIsMessagesOpen}>
+                <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Customer Messages</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        {messages.length === 0 ? (
+                            <div className="text-center py-8 text-gray-500">
+                                No messages yet
+                            </div>
+                        ) : (
+                            messages.map((message) => (
+                                <Card key={message.id} className="hover:shadow-md transition-shadow">
+                                    <CardContent className="pt-6">
+                                        <div className="space-y-3">
+                                            <div className="flex justify-between items-start">
+                                                <div className="flex-1">
+                                                    <p className="font-semibold text-gray-900">
+                                                        {message.senderName}
+                                                    </p>
+                                                    <p className="text-sm text-gray-500">
+                                                        {message.listingTitle}
+                                                    </p>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <p className="text-xs text-gray-400">
+                                                        {new Date(message.createdAt).toLocaleDateString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'short',
+                                                            day: 'numeric',
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        })}
+                                                    </p>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                                        onClick={() => setMessageToDelete(message.id)}
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                            <div className="border-t pt-3">
+                                                <p className="text-gray-700 whitespace-pre-wrap">
+                                                    {message.messageContent}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))
+                        )}
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Delete Message Confirmation Dialog */}
+            <AlertDialog open={!!messageToDelete} onOpenChange={(open) => !open && setMessageToDelete(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Message</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to delete this message? This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={handleDeleteMessage}
+                            className="bg-red-500 hover:bg-red-600"
+                        >
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
 
         </div>
     );

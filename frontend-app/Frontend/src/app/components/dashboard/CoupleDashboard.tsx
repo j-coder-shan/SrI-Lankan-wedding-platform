@@ -69,15 +69,14 @@ export function CoupleDashboard() {
                                                 {enquiry.listingTitleSnapshot || `Request #${enquiry.id}`}
                                             </CardTitle>
                                             <Badge variant={
-                                                enquiry.status === 'APPROVED' ? 'default' :
-                                                    enquiry.status === 'REJECTED' ? 'destructive' : 'secondary'
+                                                enquiry.status === 'ACCEPTED' ? 'default' :
+                                                    enquiry.status === 'DECLINED' ? 'destructive' : 'secondary'
                                             } className={
-                                                enquiry.status === 'APPROVED' ? 'bg-green-600 hover:bg-green-700' :
-                                                    enquiry.status === 'REJECTED' ? 'bg-red-600 hover:bg-red-700' :
+                                                enquiry.status === 'ACCEPTED' ? 'bg-green-600 hover:bg-green-700' :
+                                                    enquiry.status === 'DECLINED' ? 'bg-red-600 hover:bg-red-700' :
                                                         'bg-yellow-500 hover:bg-yellow-600 text-white'
                                             }>
-                                                {enquiry.status === 'APPROVED' ? 'ACCEPTED' :
-                                                    enquiry.status === 'REJECTED' ? 'DECLINED' : enquiry.status}
+                                                {enquiry.status}
                                             </Badge>
                                         </div>
                                     </CardHeader>

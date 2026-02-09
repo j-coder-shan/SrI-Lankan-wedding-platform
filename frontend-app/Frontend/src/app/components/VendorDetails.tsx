@@ -17,6 +17,7 @@ import { Navbar } from './Navbar';
 import { listingService } from '../services/listingService';
 import { reviewService } from '../services/reviewService';
 import { enquiryService } from '../services/enquiryService';
+import chatService from '../services/chatService';
 import { Listing } from '../types/listing';
 import { Review } from '../types/review';
 import { useAuth } from '../auth/AuthContext';
@@ -43,6 +44,8 @@ export function VendorDetails() {
 
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [isMessageOpen, setIsMessageOpen] = useState(false);
+  const [messageContent, setMessageContent] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -151,6 +154,34 @@ export function VendorDetails() {
     } catch (error) {
       console.error("Review failed", error);
       toast.error("Failed to submit review.");
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to send a message");
+      navigate('/login');
+      return;
+    }
+    if (!messageContent.trim()) {
+      toast.error('Please enter a message');
+      return;
+    }
+
+    try {
+      await chatService.sendMessage(
+        vendor.vendorId,
+        vendor.id,
+        messageContent,
+        user?.fullName || user?.email || 'Anonymous',
+        vendor.title
+      );
+      toast.success('Message sent successfully!');
+      setIsMessageOpen(false);
+      setMessageContent('');
+    } catch (error) {
+      console.error("Message send failed", error);
+      toast.error("Failed to send message.");
     }
   };
 
@@ -468,9 +499,39 @@ export function VendorDetails() {
                   </DialogContent>
                 </Dialog>
 
-                <Button variant="outline" className="w-full">
-                  Send Message
-                </Button>
+                <Dialog open={isMessageOpen} onOpenChange={setIsMessageOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="w-full gap-2">
+                      <Mail className="w-4 h-4" />
+                      Send Message
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Send Message to Vendor</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="message">Your Message</Label>
+                        <Textarea
+                          id="message"
+                          value={messageContent}
+                          onChange={(e) => setMessageContent(e.target.value)}
+                          placeholder="Ask about availability, pricing, or any questions..."
+                          rows={6}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setIsMessageOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleSendMessage} className="bg-rose-500 hover:bg-rose-600">
+                        Send Message
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
 
                 <div className="pt-4 border-t">
                   <p className="text-sm text-gray-500 text-center">

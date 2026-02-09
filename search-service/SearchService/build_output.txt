@@ -1,0 +1,216 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.wedding:SearchService >----------------------
+[INFO] Building SearchService 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.0:clean (default-clean) @ SearchService ---
+[INFO] Deleting C:\Users\PRABO\OneDrive\Desktop\wedding platform\SrI-Lankan-wedding-platform\search-service\SearchService\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ SearchService ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ SearchService ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 9 source files with javac [debug parameters release 17] to target\classes
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/controller/SearchController.java:[83,67] cannot find symbol
+  symbol:   method getTitle()
+  location: variable r of type com.wedding.SearchService.document.SearchListing
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/controller/SearchController.java:[83,89] cannot find symbol
+  symbol:   method getCategory()
+  location: variable r of type com.wedding.SearchService.document.SearchListing
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[29,26] cannot find symbol
+  symbol:   method getOperation()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[33,59] cannot find symbol
+  symbol:   method getStatus()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[36,96] cannot find symbol
+  symbol:   method getId()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[37,61] cannot find symbol
+  symbol:   method getCategory()
+  location: variable document of type com.wedding.SearchService.document.SearchListing
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[38,59] cannot find symbol
+  symbol:   method getStatus()
+  location: variable document of type com.wedding.SearchService.document.SearchListing
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[41,34] cannot find symbol
+  symbol:   method getId()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[42,69] cannot find symbol
+  symbol:   method getId()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[43,87] cannot find symbol
+  symbol:   method getId()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[44,44] cannot find symbol
+  symbol:   method getStatus()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[51,30] cannot find symbol
+  symbol:   method getId()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[52,65] cannot find symbol
+  symbol:   method getId()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[53,90] cannot find symbol
+  symbol:   method getId()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[58,82] cannot find symbol
+  symbol:   method getOperation()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[69,29] cannot find symbol
+  symbol:   method getId()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[70,32] cannot find symbol
+  symbol:   method getTitle()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[71,38] cannot find symbol
+  symbol:   method getDescription()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[72,35] cannot find symbol
+  symbol:   method getCategory()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[73,35] cannot find symbol
+  symbol:   method getPriceMin()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[74,35] cannot find symbol
+  symbol:   method getPriceMax()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[75,35] cannot find symbol
+  symbol:   method getDistrict()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[76,36] cannot find symbol
+  symbol:   method getAvgRating()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[77,33] cannot find symbol
+  symbol:   method getStatus()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[78,39] cannot find symbol
+  symbol:   method getMainImageUrl()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[81,18] cannot find symbol
+  symbol:   method getLat()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[81,44] cannot find symbol
+  symbol:   method getLon()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[83,56] cannot find symbol
+  symbol:   method getLon()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[83,72] cannot find symbol
+  symbol:   method getLat()
+  location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[83,21] cannot find symbol
+  symbol:   method setLocation(org.springframework.data.mongodb.core.geo.GeoJsonPoint)
+  location: variable document of type com.wedding.SearchService.document.SearchListing
+[INFO] 30 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.838 s
+[INFO] Finished at: 2026-02-08T20:25:15+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project SearchService: Compilation failure: Compilation failure: 
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/controller/SearchController.java:[83,67] cannot find symbol
+[ERROR]   symbol:   method getTitle()
+[ERROR]   location: variable r of type com.wedding.SearchService.document.SearchListing
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/controller/SearchController.java:[83,89] cannot find symbol
+[ERROR]   symbol:   method getCategory()
+[ERROR]   location: variable r of type com.wedding.SearchService.document.SearchListing
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[29,26] cannot find symbol
+[ERROR]   symbol:   method getOperation()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[33,59] cannot find symbol
+[ERROR]   symbol:   method getStatus()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[36,96] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[37,61] cannot find symbol
+[ERROR]   symbol:   method getCategory()
+[ERROR]   location: variable document of type com.wedding.SearchService.document.SearchListing
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[38,59] cannot find symbol
+[ERROR]   symbol:   method getStatus()
+[ERROR]   location: variable document of type com.wedding.SearchService.document.SearchListing
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[41,34] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[42,69] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[43,87] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[44,44] cannot find symbol
+[ERROR]   symbol:   method getStatus()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[51,30] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[52,65] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[53,90] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[58,82] cannot find symbol
+[ERROR]   symbol:   method getOperation()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[69,29] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[70,32] cannot find symbol
+[ERROR]   symbol:   method getTitle()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[71,38] cannot find symbol
+[ERROR]   symbol:   method getDescription()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[72,35] cannot find symbol
+[ERROR]   symbol:   method getCategory()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[73,35] cannot find symbol
+[ERROR]   symbol:   method getPriceMin()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[74,35] cannot find symbol
+[ERROR]   symbol:   method getPriceMax()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[75,35] cannot find symbol
+[ERROR]   symbol:   method getDistrict()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[76,36] cannot find symbol
+[ERROR]   symbol:   method getAvgRating()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[77,33] cannot find symbol
+[ERROR]   symbol:   method getStatus()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[78,39] cannot find symbol
+[ERROR]   symbol:   method getMainImageUrl()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[81,18] cannot find symbol
+[ERROR]   symbol:   method getLat()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[81,44] cannot find symbol
+[ERROR]   symbol:   method getLon()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[83,56] cannot find symbol
+[ERROR]   symbol:   method getLon()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[83,72] cannot find symbol
+[ERROR]   symbol:   method getLat()
+[ERROR]   location: variable event of type com.wedding.SearchService.dto.ListingEvent
+[ERROR] /C:/Users/PRABO/OneDrive/Desktop/wedding platform/SrI-Lankan-wedding-platform/search-service/SearchService/src/main/java/com/wedding/SearchService/listener/ListingConsumer.java:[83,21] cannot find symbol
+[ERROR]   symbol:   method setLocation(org.springframework.data.mongodb.core.geo.GeoJsonPoint)
+[ERROR]   location: variable document of type com.wedding.SearchService.document.SearchListing
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
