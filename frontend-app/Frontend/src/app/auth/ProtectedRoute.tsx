@@ -6,6 +6,7 @@ import { Role } from '../types/auth';
 /**
  * Props for the ProtectedRoute component.
  */
+// interface for the protected route component
 interface ProtectedRouteProps {
     /** The child components to render if access is granted. */
     children: ReactNode;
