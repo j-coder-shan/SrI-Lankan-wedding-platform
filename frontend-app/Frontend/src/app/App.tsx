@@ -13,6 +13,9 @@ import { VendorListings } from './components/VendorListings';
 import { VendorDetails } from './components/VendorDetails';
 import { AboutPage } from './components/AboutPage';
 import { ContactPage } from './components/ContactPage';
+import { HelpCenterPage } from './components/HelpCenterPage';
+import { TermsOfServicePage } from './components/TermsOfServicePage';
+import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
 
 export type Category = 'dress' | 'venue' | 'salon' | 'photographer';
 
@@ -49,6 +52,9 @@ function App() {
           <Route path="/vendors/:id" element={<VendorDetails />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/help" element={<HelpCenterPage />} />
+          <Route path="/terms" element={<TermsOfServicePage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
 
           {/* Auth Routes */}
           <Route path="/login" element={<LoginPage />} />
@@ -78,6 +84,16 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardRedirect />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Vendor Dashboard Alias for Footer Link */}
+          <Route
+            path="/vendor-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['ROLE_VENDOR']}>
+                <VendorDashboard />
               </ProtectedRoute>
             }
           />

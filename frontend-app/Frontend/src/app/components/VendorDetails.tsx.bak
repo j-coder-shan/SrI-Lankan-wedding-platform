@@ -589,21 +589,21 @@ export function VendorDetails() {
                       </Button>
                     </DialogFooter>
                   </DialogContent>
-                </Dialog>
+                  </Dialog>
 
-                <div className="pt-4 border-t">
-                  <p className="text-sm text-gray-500 text-center">
-                    Response time: Usually within 24 hours
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+                  <div className="pt-4 border-t">
+                    <p className="text-sm text-gray-500 text-center">
+                      Response time: Usually within 24 hours
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </div>
 
-
       <Footer />
-    </div>
+    </div >
   );
 }

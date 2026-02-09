@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../auth/AuthContext';
 import { Button } from '../ui/button';
 import { Navbar } from '../Navbar';
+import { Footer } from '../Footer';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
@@ -10,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { listingService } from '../../services/listingService';
 import { Listing } from '../../types/listing';
 import { toast } from 'sonner';
-import { Plus, Image as ImageIcon, Trash2 } from 'lucide-react';
+import { Plus, Image as ImageIcon, Trash2, TrendingUp, Calendar, MessageSquare } from 'lucide-react';
 import { ImageUpload } from '../ui/ImageUpload';
 import {
     AlertDialog,
@@ -205,71 +206,83 @@ export function VendorDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-10">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-rose-50 to-amber-50 pb-10">
             <Navbar />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
 
                 {/* 1. Existing Dashboard Stats */}
-                <div className="bg-white shadow rounded-lg p-6">
+                <div className="bg-white/80 backdrop-blur rounded-xl shadow-lg p-6 border border-white/50">
                     <div className="flex justify-between items-center mb-6">
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">Vendor Dashboard</h1>
-                            <p className="text-gray-600">Welcome back, {user?.fullName || user?.email}!</p>
+                            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
                         </div>
-                        <Button onClick={logout} variant="outline">Sign Out</Button>
+                        <Button onClick={logout} variant="outline" className="hover:bg-rose-50 hover:text-rose-600 border-rose-200">Sign Out</Button>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="p-4 border rounded-lg bg-blue-50">
-                            <h3 className="font-semibold text-blue-900">Analytics</h3>
-                            <p className="text-sm text-blue-700">View your performance stats</p>
+                        <div className="p-4 border border-blue-100 rounded-xl bg-gradient-to-br from-blue-50 to-white shadow-sm hover:shadow-md transition-all">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h3 className="font-semibold text-blue-900 flex items-center gap-2">
+                                        <TrendingUp className="w-4 h-4" /> {user?.fullName || 'Vendor'}
+                                    </h3>
+                                    <p className="text-sm text-blue-700 mt-1">{user?.email}</p>
+                                </div>
+                            </div>
+
                         </div>
                         <div
-                            className="p-4 border rounded-lg bg-green-50 cursor-pointer hover:bg-green-100 transition-colors"
+                            className="p-4 border border-green-100 rounded-xl bg-gradient-to-br from-green-50 to-white shadow-sm hover:shadow-md transition-all cursor-pointer group"
                             onClick={() => setIsEnquiriesOpen(true)}
                         >
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <h3 className="font-semibold text-green-900">Enquiries</h3>
-                                    <p className="text-sm text-green-700">Manage booking requests</p>
+                                    <h3 className="font-semibold text-green-900 flex items-center gap-2">
+                                        <Calendar className="w-4 h-4" /> Enquiries
+                                    </h3>
+                                    <p className="text-sm text-green-700 mt-1">Manage booking requests</p>
                                 </div>
-                                <span className="text-2xl font-bold text-green-800">{enquiries.length}</span>
+                                <span className="text-3xl font-bold text-green-600 group-hover:scale-110 transition-transform">{enquiries.length}</span>
                             </div>
                         </div>
                         <div
-                            className="p-4 border rounded-lg bg-purple-50 cursor-pointer hover:bg-purple-100 transition-colors"
+                            className="p-4 border border-purple-100 rounded-xl bg-gradient-to-br from-purple-50 to-white shadow-sm hover:shadow-md transition-all cursor-pointer group"
                             onClick={() => setIsMessagesOpen(true)}
                         >
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <h3 className="font-semibold text-purple-900">Messages</h3>
-                                    <p className="text-sm text-purple-700">View customer messages</p>
+                                    <h3 className="font-semibold text-purple-900 flex items-center gap-2">
+                                        <MessageSquare className="w-4 h-4" /> Messages
+                                    </h3>
+                                    <p className="text-sm text-purple-700 mt-1">View customer messages</p>
                                 </div>
-                                <span className="text-2xl font-bold text-purple-800">{messages.length}</span>
+                                <span className="text-3xl font-bold text-purple-600 group-hover:scale-110 transition-transform">{messages.length}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* 2. Add New Listing Form */}
-                <Card>
+                <Card className="shadow-xl border-t-4 border-t-rose-500">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Plus className="w-5 h-5" />
+                        <CardTitle className="flex items-center gap-2 text-2xl">
+                            <div className="bg-rose-100 p-2 rounded-full">
+                                <Plus className="w-6 h-6 text-rose-600" />
+                            </div>
                             Add New Listing
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="title">Title *</Label>
-                                    <Input id="title" name="title" value={formData.title} onChange={handleInputChange} required placeholder="Ex: Grand Ball Room" />
+                                    <Input id="title" name="title" value={formData.title} onChange={handleInputChange} required placeholder="Ex: Grand Ball Room" className="focus-visible:ring-rose-500" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="category">Category *</Label>
                                     <Select onValueChange={(val) => handleSelectChange('category', val)} value={formData.category}>
-                                        <SelectTrigger>
+                                        <SelectTrigger className="focus:ring-rose-500">
                                             <SelectValue placeholder="Select Category" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -282,25 +295,37 @@ export function VendorDashboard() {
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="priceMin">Min Price (LKR)</Label>
-                                    <Input id="priceMin" name="priceMin" type="number" value={formData.priceMin} onChange={handleInputChange} placeholder="10000" />
+                                    <Input id="priceMin" name="priceMin" type="number" value={formData.priceMin} onChange={handleInputChange} placeholder="10000" className="focus-visible:ring-rose-500" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="priceMax">Max Price (LKR)</Label>
-                                    <Input id="priceMax" name="priceMax" type="number" value={formData.priceMax} onChange={handleInputChange} placeholder="50000" />
+                                    <Input id="priceMax" name="priceMax" type="number" value={formData.priceMax} onChange={handleInputChange} placeholder="50000" className="focus-visible:ring-rose-500" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="district">District</Label>
-                                    <Input id="district" name="district" value={formData.district} onChange={handleInputChange} placeholder="Colombo" />
+                                    <Input id="district" name="district" value={formData.district} onChange={handleInputChange} placeholder="Colombo" className="focus-visible:ring-rose-500" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="city">City</Label>
-                                    <Input id="city" name="city" value={formData.city} onChange={handleInputChange} placeholder="Mount Lavinia" />
+                                    <Input id="city" name="city" value={formData.city} onChange={handleInputChange} placeholder="Mount Lavinia" className="focus-visible:ring-rose-500" />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="description">Description</Label>
-                                <Textarea id="description" name="description" value={formData.description} onChange={handleInputChange} placeholder="Describe your service..." rows={4} />
+                                <Textarea
+                                    id="description"
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleInputChange}
+                                    placeholder="Describe your service..."
+                                    rows={4}
+                                    maxLength={1000}
+                                    className="focus-visible:ring-rose-500"
+                                />
+                                <p className="text-xs text-gray-500 text-right">
+                                    {formData.description.length} / 1000 characters
+                                </p>
                             </div>
 
                             <div className="space-y-4">
@@ -316,7 +341,7 @@ export function VendorDashboard() {
                                 {formData.imageUrls && (
                                     <div className="flex flex-wrap gap-4 mt-4">
                                         {formData.imageUrls.split(',').filter(url => url.length > 0).map((url, index) => (
-                                            <div key={index} className="relative w-24 h-24 border rounded overflow-hidden group">
+                                            <div key={index} className="relative w-24 h-24 border rounded-lg overflow-hidden group shadow-sm">
                                                 <img src={url} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />
                                                 <button
                                                     type="button"
@@ -325,7 +350,7 @@ export function VendorDashboard() {
                                                         const newUrls = urls.filter((_, i) => i !== index);
                                                         setFormData(prev => ({ ...prev, imageUrls: newUrls.join(',') }));
                                                     }}
-                                                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    className="absolute top-1 right-1 bg-white/90 text-red-500 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-all hover:bg-white"
                                                 >
                                                     <Trash2 className="w-3 h-3" />
                                                 </button>
@@ -335,7 +360,7 @@ export function VendorDashboard() {
                                 )}
                             </div>
 
-                            <Button type="submit" className="w-full bg-rose-500 hover:bg-rose-600 mt-4" disabled={loading}>
+                            <Button type="submit" className="w-full bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 shadow-lg" disabled={loading}>
                                 {loading ? 'Creating Listing...' : 'Create Listing'}
                             </Button>
                         </form>
@@ -343,28 +368,30 @@ export function VendorDashboard() {
                 </Card>
 
                 {/* 3. My Listings */}
-                <Card>
+                <Card className="shadow-lg border-t-4 border-t-gray-800">
                     <CardHeader>
-                        <CardTitle>My Listings</CardTitle>
+                        <CardTitle className="text-2xl">My Listings</CardTitle>
                     </CardHeader>
                     <CardContent>
                         {listings.length === 0 ? (
-                            <div className="text-center py-8 text-gray-500">
-                                You haven't added any listings yet.
+                            <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                                <ImageIcon className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                <p className="text-gray-500 text-lg">You haven't added any listings yet.</p>
+                                <p className="text-gray-400 text-sm">Create your first listing above!</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {listings.map((listing) => (
-                                    <div key={listing.id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                                        <div className="h-48 bg-gray-200 relative group">
+                                    <div key={listing.id} className="border border-gray-100 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white group">
+                                        <div className="h-48 bg-gray-200 relative">
                                             {listing.imageUrls && listing.imageUrls.length > 0 ? (
-                                                <img src={listing.imageUrls[0]} alt={listing.title} className="w-full h-full object-cover" />
+                                                <img src={listing.imageUrls[0]} alt={listing.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                                             ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                                <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100">
                                                     <ImageIcon className="w-8 h-8" />
                                                 </div>
                                             )}
-                                            <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded text-xs font-semibold">
+                                            <div className="absolute top-2 right-2 bg-white/95 px-3 py-1 rounded-full text-xs font-bold shadow-sm text-gray-800">
                                                 {listing.category}
                                             </div>
                                             <button
@@ -372,18 +399,20 @@ export function VendorDashboard() {
                                                     e.stopPropagation();
                                                     setDeleteId(listing.id);
                                                 }}
-                                                className="absolute top-2 left-2 bg-red-500 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                                                className="absolute top-2 left-2 bg-white/90 text-red-500 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:text-red-600 shadow-sm"
                                                 title="Delete Listing"
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>
-                                        <div className="p-4">
-                                            <h3 className="font-semibold text-lg mb-1">{listing.title}</h3>
-                                            <p className="text-sm text-gray-600 mb-2 truncate">{listing.description}</p>
-                                            <div className="flex justify-between items-center text-sm text-gray-500">
-                                                <span>{listing.city}</span>
-                                                <span className="font-medium text-rose-600">{listing.priceMin} LKR +</span>
+                                        <div className="p-5">
+                                            <h3 className="font-bold text-lg mb-2 text-gray-900 line-clamp-1">{listing.title}</h3>
+                                            <p className="text-sm text-gray-600 mb-4 line-clamp-2">{listing.description}</p>
+                                            <div className="flex justify-between items-center text-sm pt-4 border-t border-gray-100">
+                                                <span className="text-gray-500 flex items-center gap-1">
+                                                    {listing.city}
+                                                </span>
+                                                <span className="font-bold text-rose-600 bg-rose-50 px-2 py-1 rounded">{listing.priceMin.toLocaleString()} LKR +</span>
                                             </div>
                                         </div>
                                     </div>
@@ -414,6 +443,8 @@ export function VendorDashboard() {
 
             </div>
 
+            <Footer />
+
             {/* Enquiries Modal */}
             <Dialog open={isEnquiriesOpen} onOpenChange={setIsEnquiriesOpen}>
                 <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
@@ -422,46 +453,52 @@ export function VendorDashboard() {
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                         {enquiries.length === 0 ? (
-                            <p className="text-center text-gray-500 py-8">No enquiries yet.</p>
+                            <div className="text-center py-12 bg-gray-50 rounded-lg">
+                                <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                <p className="text-gray-500">No enquiries yet.</p>
+                            </div>
                         ) : (
                             enquiries.map((enquiry) => (
-                                <Card key={enquiry.id}>
-                                    <CardContent className="p-4">
+                                <Card key={enquiry.id} className="border-l-4 border-l-blue-500 shadow-sm">
+                                    <CardContent className="p-5">
                                         <div className="flex justify-between items-start">
-                                            <div>
-                                                <h4 className="font-semibold text-lg">
+                                            <div className="space-y-2">
+                                                <h4 className="font-bold text-lg text-gray-900">
                                                     {enquiry.listingTitleSnapshot || `Listing #${enquiry.listingId}`}
                                                 </h4>
-                                                <p className="text-sm text-gray-500 mb-2">
-                                                    Event Date: {new Date(enquiry.eventDate).toLocaleDateString()}
-                                                </p>
-                                                <p className="text-sm"><strong>Guest Count:</strong> {enquiry.guestCount}</p>
-                                                <div className="mt-2 text-sm text-gray-700">
-                                                    <p><strong>Contact:</strong> {enquiry.coupleNameSnapshot || 'N/A'}</p>
-                                                    <p><strong>Email:</strong> {enquiry.coupleEmailSnapshot || 'N/A'}</p>
-                                                    <p><strong>Phone:</strong> {enquiry.couplePhoneSnapshot || 'N/A'}</p>
+
+                                                <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-sm text-gray-600">
+                                                    <p><span className="font-medium">Date:</span> {new Date(enquiry.eventDate).toLocaleDateString()}</p>
+                                                    <p><span className="font-medium">Guests:</span> {enquiry.guestCount}</p>
+                                                    <p><span className="font-medium">Client:</span> {enquiry.coupleNameSnapshot || 'N/A'}</p>
+                                                    <p><span className="font-medium">Phone:</span> {enquiry.couplePhoneSnapshot || 'N/A'}</p>
                                                 </div>
+
+                                                <div className="text-sm">
+                                                    <p><span className="font-medium">Email:</span> {enquiry.coupleEmailSnapshot || 'N/A'}</p>
+                                                </div>
+
                                                 {enquiry.message && (
-                                                    <div className="mt-2 text-sm bg-gray-50 p-2 rounded">
-                                                        <p className="font-semibold text-xs text-gray-500 uppercase">Message</p>
-                                                        <p>{enquiry.message}</p>
+                                                    <div className="mt-3 text-sm bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                                        <p className="font-semibold text-xs text-blue-800 uppercase mb-1">Message from Client</p>
+                                                        <p className="text-blue-900">{enquiry.message}</p>
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className="flex flex-col items-end gap-2">
-                                                <span className={`px-2 py-1 rounded text-xs font-semibold
-                                                    ${enquiry.status === 'ACCEPTED' ? 'bg-green-100 text-green-800' :
-                                                        enquiry.status === 'DECLINED' ? 'bg-red-100 text-red-800' :
-                                                            'bg-yellow-100 text-yellow-800'}`}>
+                                            <div className="flex flex-col items-end gap-3">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-bold border
+                                                    ${enquiry.status === 'ACCEPTED' ? 'bg-green-100 text-green-700 border-green-200' :
+                                                        enquiry.status === 'DECLINED' ? 'bg-red-100 text-red-700 border-red-200' :
+                                                            'bg-yellow-100 text-yellow-700 border-yellow-200'}`}>
                                                     {enquiry.status}
                                                 </span>
 
                                                 {/* Action Buttons for PENDING status */}
                                                 {enquiry.status === 'PENDING' && (
-                                                    <div className="flex gap-2 mt-2">
+                                                    <div className="flex gap-2">
                                                         <Button
                                                             size="sm"
-                                                            className="bg-green-600 hover:bg-green-700 h-8"
+                                                            className="bg-green-600 hover:bg-green-700 shadow-sm"
                                                             onClick={async () => {
                                                                 try {
                                                                     await enquiryService.updateStatus(enquiry.id, 'APPROVED');
@@ -478,7 +515,7 @@ export function VendorDashboard() {
                                                         <Button
                                                             size="sm"
                                                             variant="destructive"
-                                                            className="h-8"
+                                                            className="shadow-sm"
                                                             onClick={async () => {
                                                                 try {
                                                                     await enquiryService.updateStatus(enquiry.id, 'REJECTED');
@@ -512,25 +549,26 @@ export function VendorDashboard() {
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                         {messages.length === 0 ? (
-                            <div className="text-center py-8 text-gray-500">
-                                No messages yet
+                            <div className="text-center py-12 bg-gray-50 rounded-lg">
+                                <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                <p className="text-gray-500">No messages yet</p>
                             </div>
                         ) : (
                             messages.map((message) => (
-                                <Card key={message.id} className="hover:shadow-md transition-shadow">
+                                <Card key={message.id} className="hover:shadow-md transition-shadow border-l-4 border-l-purple-500">
                                     <CardContent className="pt-6">
                                         <div className="space-y-3">
                                             <div className="flex justify-between items-start">
                                                 <div className="flex-1">
-                                                    <p className="font-semibold text-gray-900">
+                                                    <p className="font-bold text-gray-900 text-lg">
                                                         {message.senderName}
                                                     </p>
-                                                    <p className="text-sm text-gray-500">
-                                                        {message.listingTitle}
+                                                    <p className="text-sm text-purple-600 font-medium">
+                                                        Re: {message.listingTitle}
                                                     </p>
                                                 </div>
-                                                <div className="flex items-center gap-2">
-                                                    <p className="text-xs text-gray-400">
+                                                <div className="flex items-center gap-3">
+                                                    <p className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">
                                                         {new Date(message.createdAt).toLocaleDateString('en-US', {
                                                             year: 'numeric',
                                                             month: 'short',
@@ -542,15 +580,15 @@ export function VendorDashboard() {
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                                        className="h-8 w-8 text-red-400 hover:text-red-600 hover:bg-red-50"
                                                         onClick={() => setMessageToDelete(message.id)}
                                                     >
                                                         <Trash2 className="h-4 w-4" />
                                                     </Button>
                                                 </div>
                                             </div>
-                                            <div className="border-t pt-3">
-                                                <p className="text-gray-700 whitespace-pre-wrap">
+                                            <div className="bg-purple-50/50 p-4 rounded-lg border border-purple-100">
+                                                <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
                                                     {message.messageContent}
                                                 </p>
                                             </div>

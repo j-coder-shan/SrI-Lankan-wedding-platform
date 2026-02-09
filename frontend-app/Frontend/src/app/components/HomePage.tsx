@@ -6,6 +6,7 @@ import { CategoryCard } from './CategoryCard';
 import { FeaturedVendors } from './FeaturedVendors';
 import { Category } from '../App';
 import { Navbar } from './Navbar';
+import { Footer } from './Footer';
 import { useNavigate } from 'react-router-dom';
 
 export function HomePage() {
@@ -16,23 +17,24 @@ export function HomePage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-gradient-to-br from-rose-100 via-pink-100 to-purple-100 py-24">
+        <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 animate-fade-in">
               Your Dream Wedding
-              <span className="text-rose-500"> Starts Here</span>
+              <span className="text-rose-600"> Starts Here</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-xl text-gray-700 mb-8">
               Discover the perfect vendors for your special day. From stunning venues to exquisite dresses, we've got everything you need.
             </p>
 
             {/* Search Bar */}
-            <div className="max-w-2xl mx-auto bg-white rounded-full shadow-lg p-2 flex gap-2">
+            <div className="max-w-2xl mx-auto bg-white rounded-full shadow-xl p-2 flex gap-2 border border-rose-200">
               <div className="flex-1 flex items-center px-4">
                 <Search className="w-5 h-5 text-gray-400 mr-2" />
                 <Input
@@ -40,7 +42,7 @@ export function HomePage() {
                   className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
               </div>
-              <Button className="rounded-full bg-rose-500 hover:bg-rose-600 px-8">
+              <Button className="rounded-full bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 px-8 shadow-lg">
                 Search
               </Button>
             </div>
@@ -97,49 +99,7 @@ export function HomePage() {
       <FeaturedVendors onCategorySelect={handleCategorySelect} />
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                {/* Heart Icon - Simplified since it was imported from lucide-react but specific styling might need checking */}
-                <span className="text-xl font-semibold">WeddingHub</span>
-              </div>
-              <p className="text-gray-400">
-                Your one-stop platform for all wedding needs
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Categories</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Wedding Dresses</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Venues</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Salons</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Photographers</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="/about" className="hover:text-white transition-colors">About Us</a></li>
-                <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Become a Vendor</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Support</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 WeddingHub. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -38,6 +38,13 @@ spring:
           predicates:
             - Path=/api/listings/uploads/**
           # No Auth Filter for static images
+        - id: listing-service-upload
+          uri: lb://LISTING-SERVICE
+          predicates:
+            - Path=/api/listings/upload
+            - Method=POST
+          filters:
+            - name: CustomAuthFilter
         - id: listing-service-public-get
           uri: lb://LISTING-SERVICE
           predicates:
