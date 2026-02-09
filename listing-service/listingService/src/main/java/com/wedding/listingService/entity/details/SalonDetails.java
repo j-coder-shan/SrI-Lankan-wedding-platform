@@ -13,6 +13,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class SalonDetails extends Listing {
-    private String gender; // (BRIDAL, GROOM, UNISEX)
-    private String services; // Stored as a string for simplicity
+    private String gender; 
+    private String services; 
 }

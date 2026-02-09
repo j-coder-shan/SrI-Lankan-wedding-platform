@@ -13,5 +13,5 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class DressDetails extends Listing {
-    private String materialType; // (KANDYAN, WESTERN)
+    private String materialType; 
 }

@@ -16,9 +16,9 @@ public class ListingImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "listing_id", nullable = false)
-    @com.fasterxml.jackson.annotation.JsonIgnore // Prevent infinite recursion during serialization
-    @lombok.ToString.Exclude // Prevent infinite recursion in toString()
-    @lombok.EqualsAndHashCode.Exclude // Prevent infinite recursion in hashCode()
+    @com.fasterxml.jackson.annotation.JsonIgnore 
+    @lombok.ToString.Exclude 
+    @lombok.EqualsAndHashCode.Exclude 
     private Listing listing;
 
     @Column(nullable = false)
