@@ -9,6 +9,7 @@ const apiClient = axios.create({
 });
 
 // Add interceptor to include auth token
+// if token is present, add it to the request headers
 apiClient.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
     if (token) {
