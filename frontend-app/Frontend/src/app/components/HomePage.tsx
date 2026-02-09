@@ -1,7 +1,5 @@
 import React from 'react';
-import { Search } from 'lucide-react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
+
 import { CategoryCard } from './CategoryCard';
 import { FeaturedVendors } from './FeaturedVendors';
 import { Category } from '../App';
@@ -32,20 +30,14 @@ export function HomePage() {
             <p className="text-xl text-gray-700 mb-8">
               Discover the perfect vendors for your special day. From stunning venues to exquisite dresses, we've got everything you need.
             </p>
+            <p className="text-lg text-gray-600 mb-6">
+              We connect you with the finest wedding professionals in Sri Lanka, ensuring your celebration is nothing short of magical. Whether you're planning an intimate gathering or a grand royal wedding, our platform simplifies the planning process.
+            </p>
+            <p className="text-lg text-gray-600 mb-8">
+              Browse through verified reviews, view portfolios, and connect directly with vendors who match your style and budget. Let us help you turn your vision into reality, stress-free.
+            </p>
 
-            {/* Search Bar */}
-            <div className="max-w-2xl mx-auto bg-white rounded-full shadow-xl p-2 flex gap-2 border border-rose-200">
-              <div className="flex-1 flex items-center px-4">
-                <Search className="w-5 h-5 text-gray-400 mr-2" />
-                <Input
-                  placeholder="Search for vendors, venues, or services..."
-                  className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                />
-              </div>
-              <Button className="rounded-full bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 px-8 shadow-lg">
-                Search
-              </Button>
-            </div>
+
           </div>
         </div>
       </section>
