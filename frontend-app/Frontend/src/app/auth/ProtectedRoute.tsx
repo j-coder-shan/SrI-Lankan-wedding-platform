@@ -49,5 +49,7 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
 
     // If all checks pass, render the protected content
     // if user is allowed, render the children
+
+    // if user is not allowed, redirect to their appropriate dashboard
     return <>{children}</>;
 }
