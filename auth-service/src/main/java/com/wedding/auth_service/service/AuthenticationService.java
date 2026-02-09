@@ -41,7 +41,8 @@ public class AuthenticationService {
 
                 userRepository.save(user);
 
-                var jwtToken = jwtService.generateToken(user);
+                var jwtToken = jwtService
+                                .generateToken(java.util.Map.of("userId", user.getId(), "role", user.getRole()), user);
                 var refreshToken = createRefreshToken(user);
 
                 return AuthResponse.builder()
@@ -58,8 +59,11 @@ public class AuthenticationService {
                                                 request.getEmail(),
                                                 request.getPassword()));
 
-                var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-                var jwtToken = jwtService.generateToken(user);
+                var user = userRepository.findByEmail(request.getEmail())
+                                .orElseThrow(() -> new org.springframework.security.core.userdetails.UsernameNotFoundException(
+                                                "User not found with email: " + request.getEmail()));
+                var jwtToken = jwtService
+                                .generateToken(java.util.Map.of("userId", user.getId(), "role", user.getRole()), user);
                 var refreshToken = createRefreshToken(user); // Rotate refresh token on login
 
                 return AuthResponse.builder()
@@ -76,7 +80,8 @@ public class AuthenticationService {
                                         // Check Expiry (Simple check, ideally configure in entity)
                                         // For now, assume valid if exists. Real app needs date check.
                                         var user = refreshToken.getUser();
-                                        var accessToken = jwtService.generateToken(user);
+                                        var accessToken = jwtService.generateToken(java.util.Map.of("userId",
+                                                        user.getId(), "role", user.getRole()), user);
                                         return AuthResponse.builder()
                                                         .accessToken(accessToken)
                                                         .refreshToken(refreshToken.getToken())

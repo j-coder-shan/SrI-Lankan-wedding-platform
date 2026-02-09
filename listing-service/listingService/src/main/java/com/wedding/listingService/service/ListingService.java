@@ -7,13 +7,13 @@ import com.wedding.listingService.dto.ListingResponseDTO;
 import java.util.List;
 
 public interface ListingService {
-    
+
     // Task 1.2: Create listing
     void createListing(ListingRequestDTO requestDTO, Long vendorId);
-    
+
     // Task 1.2: Update listing. Throws custom exceptions.
     void updateListing(Long listingId, ListingRequestDTO requestDTO, Long vendorId);
-    
+
     // Task 3.2: Internal rating update
     void updateListingRating(Long listingId, Double newAvgRating);
 
@@ -21,6 +21,15 @@ public interface ListingService {
     ListingResponseDTO getListingById(Long listingId);
 
     // Task 1.2: Get vendor's listings
+    // Task 1.2: Get vendor's listings
     List<ListingResponseDTO> getVendorListings(Long vendorId);
-}
 
+    // Bypass Search: Get all listings (optionally by category)
+    List<ListingResponseDTO> getAllListings(String category);
+
+    // Task: Delete listing
+    void deleteListing(Long listingId, Long vendorId);
+
+    // Upload image and return URL path
+    String uploadImage(org.springframework.web.multipart.MultipartFile file);
+}

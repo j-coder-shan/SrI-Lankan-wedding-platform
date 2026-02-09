@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Filter, MapPin } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Category } from '../App';
-import { vendors } from '../data/mockData';
+import { Vendor, Category } from '../App';
+import { vendorService } from '../services/vendorService';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Star } from 'lucide-react';
 
 export function VendorListings() {
+  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState<string>('rating');
   const [priceFilter, setPriceFilter] = useState<string>('all');
   const [searchParams] = useSearchParams();
@@ -22,13 +24,28 @@ export function VendorListings() {
   const categoryTitles: Record<Category, string> = {
     dress: 'Wedding Dresses & Attire',
     venue: 'Wedding Venues',
-    saloon: 'Beauty Salons',
+    salon: 'Beauty Salons',
     photographer: 'Wedding Photographers'
   };
 
+  useEffect(() => {
+    const fetchVendors = async () => {
+      setLoading(true);
+      try {
+        const data = await vendorService.getAllVendors(category, priceFilter);
+        setVendors(data);
+      } catch (error) {
+        console.error("Failed to load vendors", error);
+        // Optional: Show error toast
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVendors();
+  }, [category, priceFilter]);
+
   const filteredVendors = vendors
-    .filter(v => !category || v.category === category)
-    .filter(v => priceFilter === 'all' || v.priceRange === priceFilter)
     .sort((a, b) => {
       if (sortBy === 'rating') return b.rating - a.rating;
       if (sortBy === 'reviews') return b.reviewCount - a.reviewCount;

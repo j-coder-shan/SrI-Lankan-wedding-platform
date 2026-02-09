@@ -8,6 +8,12 @@ eureka:
       defaultZone: http://localhost:8761/eureka # Connects to Eureka
 
 spring:
+  application:
+    name: listing-service
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   config:
     import: "optional:configserver:"
   cloud:

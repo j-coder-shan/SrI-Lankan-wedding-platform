@@ -1,17 +1,30 @@
 server:
-  port: 8084
+  port: 8089
 
 spring:
   application:
     name: enquiry-service
   datasource:
-    url: jdbc:mysql://localhost:3307/enquiry_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3307/enquiry_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
-    password: password
+    password: 1234
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+# Resilience4j for Financial Service calls (if needed)
 resilience4j:
   circuitbreaker:
     instances:

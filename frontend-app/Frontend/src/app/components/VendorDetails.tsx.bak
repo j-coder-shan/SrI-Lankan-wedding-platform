@@ -1,0 +1,609 @@
+import { useState, useEffect } from 'react';
+import { ArrowLeft, Star, MapPin, DollarSign, Calendar, Phone, Mail, Heart } from 'lucide-react';
+import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
+import { Separator } from './ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from './ui/dialog';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { ImageWithFallback } from './figma/ImageWithFallback';
+import { toast } from 'sonner';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Navbar } from './Navbar';
+import { Footer } from './Footer';
+import { listingService } from '../services/listingService';
+import { reviewService } from '../services/reviewService';
+import { enquiryService } from '../services/enquiryService';
+import chatService from '../services/chatService';
+import { Listing } from '../types/listing';
+import { Review } from '../types/review';
+import { useAuth } from '../auth/AuthContext';
+
+export function VendorDetails() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
+
+  const [vendor, setVendor] = useState<Listing | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [bookingDate, setBookingDate] = useState('');
+  const [bookingName, setBookingName] = useState(user?.fullName || '');
+  const [bookingEmail, setBookingEmail] = useState(user?.email || '');
+  const [bookingPhone, setBookingPhone] = useState(user?.phone || '');
+  const [bookingMessage, setBookingMessage] = useState('');
+  const [bookingGuestCount, setBookingGuestCount] = useState<number>(100);
+
+  const [reviewRating, setReviewRating] = useState('5');
+  const [reviewComment, setReviewComment] = useState('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [isMessageOpen, setIsMessageOpen] = useState(false);
+  const [messageContent, setMessageContent] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const listingData = await listingService.getListingById(id);
+        setVendor(listingData);
+
+        // Fetch reviews
+        try {
+          const reviewsData = await reviewService.getReviewsByListing(Number(id));
+          setReviews(reviewsData);
+        } catch (err) {
+          console.error("Failed to load reviews", err);
+        }
+      } catch (error) {
+        console.error("Failed to load listing", error);
+        toast.error("Could not load vendor details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p>Loading vendor details...</p>
+      </div>
+    );
+  }
+
+  if (!vendor) {
+    return <div>Vendor not found</div>;
+  }
+
+  const handleBooking = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to book a vendor");
+      navigate('/login');
+      return;
+    }
+    if (!bookingDate || !bookingGuestCount) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      await enquiryService.createEnquiry({
+        listingId: vendor.id,
+        vendorId: vendor.vendorId,
+        coupleId: user?.id || 0,
+        eventDate: bookingDate,
+        guestCount: Number(bookingGuestCount),
+        message: bookingMessage,
+        coupleNameSnapshot: bookingName,
+        coupleEmailSnapshot: bookingEmail,
+        couplePhoneSnapshot: bookingPhone,
+        listingTitleSnapshot: vendor.title
+      });
+      toast.success('Booking request submitted! The vendor will contact you soon.');
+      setIsBookingOpen(false);
+
+      // Clear form
+      setBookingDate('');
+      setBookingMessage('');
+      setBookingGuestCount(100);
+      // Optional: Reset contact info if you want, but usually users like it persisted. 
+      // Requirement said "clear the form fields", so I will reset them to defaults or empty.
+      // However, usually name/email/phone come from user profile, so I might reset them to user defaults?
+      // "clear the form fields" usually implies the specific booking details. 
+      // I'll reset message, date, and guests. keeping name/email/phone as they are pre-filled.
+      // Wait, requirement: "clear the form fields". I will stick to clearing the booking specific fields.
+    } catch (error) {
+      console.error("Booking failed", error);
+      toast.error("Failed to submit booking request.");
+    }
+  };
+
+  const handleReviewSubmit = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to review");
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const newReview = await reviewService.createReview({
+        listingId: vendor.id,
+        rating: Number(reviewRating),
+        comment: reviewComment
+      });
+
+      setReviews([newReview, ...reviews]); // Optimistic update
+      toast.success('Thank you for your review!');
+      setIsReviewOpen(false);
+      setReviewComment('');
+      setReviewRating('5');
+    } catch (error) {
+      console.error("Review failed", error);
+      toast.error("Failed to submit review.");
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to send a message");
+      navigate('/login');
+      return;
+    }
+    if (!messageContent.trim()) {
+      toast.error('Please enter a message');
+      return;
+    }
+
+    try {
+      await chatService.sendMessage(
+        vendor.vendorId,
+        vendor.id,
+        messageContent,
+        user?.fullName || user?.email || 'Anonymous',
+        vendor.title
+      );
+      toast.success('Message sent successfully!');
+      setIsMessageOpen(false);
+      setMessageContent('');
+    } catch (error) {
+      console.error("Message send failed", error);
+      toast.error("Failed to send message.");
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      {/* Header */}
+      <div className="bg-white shadow-sm sticky top-[73px] z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to listings
+          </Button>
+        </div>
+      </div>
+
+      {/* Hero Image Carousel */}
+      <div className="relative h-96 overflow-hidden group">
+        {vendor.imageUrls && vendor.imageUrls.length > 0 ? (
+          <>
+            {/* Current Image */}
+            <ImageWithFallback
+              src={vendor.imageUrls[currentImageIndex]}
+              alt={`${vendor.title} - Image ${currentImageIndex + 1}`}
+              className="w-full h-full object-cover transition-opacity duration-500"
+            />
+
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+            {/* Navigation Buttons - Only show if more than 1 image */}
+            {vendor.imageUrls.length > 1 && (
+              <>
+                {/* Previous Button */}
+                <button
+                  onClick={() => setCurrentImageIndex((prev) =>
+                    prev === 0 ? vendor.imageUrls!.length - 1 : prev - 1
+                  )}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                  aria-label="Previous image"
+                >
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+
+                {/* Next Button */}
+                <button
+                  onClick={() => setCurrentImageIndex((prev) =>
+                    prev === vendor.imageUrls!.length - 1 ? 0 : prev + 1
+                  )}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                  aria-label="Next image"
+                >
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                {/* Image Indicators */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                  {vendor.imageUrls.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentImageIndex
+                        ? 'bg-white w-8'
+                        : 'bg-white/50 hover:bg-white/75'
+                        }`}
+                      aria-label={`Go to image ${index + 1}`}
+                    />
+                  ))}
+                </div>
+
+                {/* Image Counter */}
+                <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm z-10">
+                  {currentImageIndex + 1} / {vendor.imageUrls.length}
+                </div>
+              </>
+            )}
+          </>
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+            <p className="text-gray-400">No images available</p>
+          </div>
+        )}
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Details */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Vendor Info */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CardTitle className="text-3xl">{vendor.title}</CardTitle>
+                      <Badge variant="secondary" className="capitalize">
+                        {vendor.category}
+                      </Badge>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-4 text-gray-600">
+                      <div className="flex items-center gap-1">
+                        <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                        <span className="font-semibold">{vendor.avgRating || 'New'}</span>
+                        <span className="text-sm">({reviews.length} reviews)</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-4 h-4" />
+                        <span>{vendor.city}, {vendor.district}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <DollarSign className="w-4 h-4" />
+                        <span>{vendor.priceMin} - {vendor.priceMax} LKR</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsFavorite(!isFavorite)}
+                    className="shrink-0"
+                  >
+                    <Heart
+                      className={`w-6 h-6 ${isFavorite ? 'fill-rose-500 text-rose-500' : 'text-gray-400'}`}
+                    />
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-700 leading-relaxed">{vendor.description}</p>
+              </CardContent>
+            </Card>
+
+            {/* Tabs */}
+            <Tabs defaultValue="reviews" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
+                <TabsTrigger value="about">About</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="reviews" className="space-y-4 mt-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-semibold">Customer Reviews</h3>
+                  <Dialog open={isReviewOpen} onOpenChange={setIsReviewOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="gap-2">
+                        <Star className="w-4 h-4" />
+                        Write a Review
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Write a Review</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="rating">Rating</Label>
+                          <Select value={reviewRating} onValueChange={setReviewRating}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="5">5 Stars - Excellent</SelectItem>
+                              <SelectItem value="4">4 Stars - Very Good</SelectItem>
+                              <SelectItem value="3">3 Stars - Good</SelectItem>
+                              <SelectItem value="2">2 Stars - Fair</SelectItem>
+                              <SelectItem value="1">1 Star - Poor</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="comment">Your Review</Label>
+                          <Textarea
+                            id="comment"
+                            value={reviewComment}
+                            onChange={(e) => setReviewComment(e.target.value)}
+                            placeholder="Share your experience..."
+                            rows={5}
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsReviewOpen(false)}>
+                          Cancel
+                        </Button>
+                        <Button onClick={handleReviewSubmit} className="bg-rose-500 hover:bg-rose-600">
+                          Submit Review
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                {reviews.length > 0 ? (
+                  <div className="space-y-4">
+                    {reviews.map((review) => (
+                      <Card key={review.id}>
+                        <CardContent className="pt-6">
+                          <div className="flex items-start justify-between mb-3">
+                            <div>
+                              <p className="font-semibold text-gray-900">{review.userName || `User #${review.userId}`}</p>
+                              <p className="text-sm text-gray-500">
+                                {new Date(review.createdAt || Date.now()).toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric'
+                                })}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`w-4 h-4 ${i < review.rating
+                                    ? 'fill-yellow-400 text-yellow-400'
+                                    : 'text-gray-300'
+                                    }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                          <p className="text-gray-700">{review.comment}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <Card>
+                    <CardContent className="py-12 text-center">
+                      <p className="text-gray-500">No reviews yet. Be the first to review!</p>
+                    </CardContent>
+                  </Card>
+                )}
+              </TabsContent>
+
+              <TabsContent value="about" className="mt-6">
+                <Card>
+                  <CardContent className="pt-6 space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">Location</h4>
+                      <p className="text-gray-700">{vendor.city}, {vendor.district}</p>
+                    </div>
+                    <Separator />
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">Price Range</h4>
+                      <p className="text-gray-700">{vendor.priceMin} - {vendor.priceMax}</p>
+                    </div>
+                    <Separator />
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">Category</h4>
+                      <Badge className="capitalize">{vendor.category}</Badge>
+                    </div>
+                    <Separator />
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">About</h4>
+                      <p className="text-gray-700">{vendor.description}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          {/* Right Column - Booking */}
+          <div className="lg:col-span-1">
+            <Card className="sticky top-24">
+              <CardHeader>
+                <CardTitle>Book This Vendor</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 text-gray-700">
+                    <Phone className="w-5 h-5 text-gray-400" />
+                    <span>+94 (Available on request)</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-gray-700">
+                    <Mail className="w-5 h-5 text-gray-400" />
+                    <span>Contact via form</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-gray-700">
+                    <MapPin className="w-5 h-5 text-gray-400" />
+                    <span>{vendor.city}</span>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="w-full bg-rose-500 hover:bg-rose-600 gap-2">
+                      <Calendar className="w-4 h-4" />
+                      Request Booking
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Request a Booking</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Full Name *</Label>
+                        <Input
+                          id="name"
+                          value={bookingName}
+                          onChange={(e) => setBookingName(e.target.value)}
+                          placeholder="Enter your name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email *</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={bookingEmail}
+                          onChange={(e) => setBookingEmail(e.target.value)}
+                          placeholder="your@email.com"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="phone">Phone Number *</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          value={bookingPhone}
+                          onChange={(e) => setBookingPhone(e.target.value)}
+                          placeholder="+94 7X XXX XXXX"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="date">Preferred Date *</Label>
+                        <Input
+                          id="date"
+                          type="date"
+                          value={bookingDate}
+                          onChange={(e) => setBookingDate(e.target.value)}
+                          min={new Date().toISOString().split('T')[0]}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guests">Guest Count</Label>
+                        <Input
+                          id="guests"
+                          type="number"
+                          value={bookingGuestCount}
+                          onChange={(e) => setBookingGuestCount(Number(e.target.value))}
+                          placeholder="100"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="message">Message (Optional)</Label>
+                        <Textarea
+                          id="message"
+                          value={bookingMessage}
+                          onChange={(e) => setBookingMessage(e.target.value)}
+                          placeholder="Tell us about your wedding plans..."
+                          rows={4}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setIsBookingOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleBooking} className="bg-rose-500 hover:bg-rose-600">
+                        Submit Request
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+
+                <Dialog open={isMessageOpen} onOpenChange={setIsMessageOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="w-full gap-2">
+                      <Mail className="w-4 h-4" />
+                      Send Message
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Send Message to Vendor</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="message">Your Message</Label>
+                        <Textarea
+                          id="message"
+                          value={messageContent}
+                          onChange={(e) => setMessageContent(e.target.value)}
+                          placeholder="Ask about availability, pricing, or any questions..."
+                          rows={6}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setIsMessageOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleSendMessage} className="bg-rose-500 hover:bg-rose-600">
+                        Send Message
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                  </Dialog>
+
+                  <div className="pt-4 border-t">
+                    <p className="text-sm text-gray-500 text-center">
+                      Response time: Usually within 24 hours
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div >
+  );
+}

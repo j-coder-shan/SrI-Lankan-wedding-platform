@@ -1,0 +1,30 @@
+077334513
+
+Shan
+couple1@test.com
+Shan2002
+
+vendor
+
+sithum
+sithum@example.com
+sithum2002
+
+x@example.com
+example
+
+y@example.com
+yexample
+
+
+
+pgAdmin (PostgreSQL)
+URL: http://localhost:5050
+Email: admin@admin.com
+Password: 1234
+
+
+Host: localhost
+Port: 3307 (mapped from container port 3306)
+Root Username: root
+Root Password: 1234

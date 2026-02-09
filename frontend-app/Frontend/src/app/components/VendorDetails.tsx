@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Star, MapPin, DollarSign, Calendar, Phone, Mail, Heart } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -10,58 +10,176 @@ import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { reviews, vendors } from '../data/mockData';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { toast } from 'sonner';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Navbar } from './Navbar';
+import { Footer } from './Footer';
+import { listingService } from '../services/listingService';
+import { reviewService } from '../services/reviewService';
+import { enquiryService } from '../services/enquiryService';
+import chatService from '../services/chatService';
+import { Listing } from '../types/listing';
+import { Review } from '../types/review';
+import { useAuth } from '../auth/AuthContext';
 
 export function VendorDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const vendor = vendors.find(v => v.id === Number(id));
+  const { user, isAuthenticated } = useAuth();
+
+  const [vendor, setVendor] = useState<Listing | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [isFavorite, setIsFavorite] = useState(false);
   const [bookingDate, setBookingDate] = useState('');
-  const [bookingName, setBookingName] = useState('');
-  const [bookingEmail, setBookingEmail] = useState('');
-  const [bookingPhone, setBookingPhone] = useState('');
+  const [bookingName, setBookingName] = useState(user?.fullName || '');
+  const [bookingEmail, setBookingEmail] = useState(user?.email || '');
+  const [bookingPhone, setBookingPhone] = useState(user?.phone || '');
   const [bookingMessage, setBookingMessage] = useState('');
+  const [bookingGuestCount, setBookingGuestCount] = useState<number>(100);
+
   const [reviewRating, setReviewRating] = useState('5');
   const [reviewComment, setReviewComment] = useState('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [isMessageOpen, setIsMessageOpen] = useState(false);
+  const [messageContent, setMessageContent] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const listingData = await listingService.getListingById(id);
+        setVendor(listingData);
+
+        // Fetch reviews
+        try {
+          const reviewsData = await reviewService.getReviewsByListing(Number(id));
+          setReviews(reviewsData);
+        } catch (err) {
+          console.error("Failed to load reviews", err);
+        }
+      } catch (error) {
+        console.error("Failed to load listing", error);
+        toast.error("Could not load vendor details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p>Loading vendor details...</p>
+      </div>
+    );
+  }
 
   if (!vendor) {
     return <div>Vendor not found</div>;
   }
 
-  const vendorReviews = reviews.filter(r => r.vendorId === vendor.id);
-
-  const handleBooking = () => {
-    if (!bookingDate || !bookingName || !bookingEmail || !bookingPhone) {
+  const handleBooking = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to book a vendor");
+      navigate('/login');
+      return;
+    }
+    if (!bookingDate || !bookingGuestCount) {
       toast.error('Please fill in all required fields');
       return;
     }
-    toast.success('Booking request submitted! The vendor will contact you soon.');
-    setIsBookingOpen(false);
-    // Reset form
-    setBookingDate('');
-    setBookingName('');
-    setBookingEmail('');
-    setBookingPhone('');
-    setBookingMessage('');
+
+    try {
+      await enquiryService.createEnquiry({
+        listingId: vendor.id,
+        vendorId: vendor.vendorId,
+        coupleId: user?.id || 0,
+        eventDate: bookingDate,
+        guestCount: Number(bookingGuestCount),
+        message: bookingMessage,
+        coupleNameSnapshot: bookingName,
+        coupleEmailSnapshot: bookingEmail,
+        couplePhoneSnapshot: bookingPhone,
+        listingTitleSnapshot: vendor.title
+      });
+      toast.success('Booking request submitted! The vendor will contact you soon.');
+      setIsBookingOpen(false);
+
+      // Clear form
+      setBookingDate('');
+      setBookingMessage('');
+      setBookingGuestCount(100);
+      // Optional: Reset contact info if you want, but usually users like it persisted. 
+      // Requirement said "clear the form fields", so I will reset them to defaults or empty.
+      // However, usually name/email/phone come from user profile, so I might reset them to user defaults?
+      // "clear the form fields" usually implies the specific booking details. 
+      // I'll reset message, date, and guests. keeping name/email/phone as they are pre-filled.
+      // Wait, requirement: "clear the form fields". I will stick to clearing the booking specific fields.
+    } catch (error) {
+      console.error("Booking failed", error);
+      toast.error("Failed to submit booking request.");
+    }
   };
 
-  const handleReviewSubmit = () => {
-    if (!reviewComment.trim()) {
-      toast.error('Please write a review comment');
+  const handleReviewSubmit = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to review");
+      navigate('/login');
       return;
     }
-    toast.success('Thank you for your review!');
-    setIsReviewOpen(false);
-    setReviewComment('');
-    setReviewRating('5');
+
+    try {
+      const newReview = await reviewService.createReview({
+        listingId: vendor.id,
+        rating: Number(reviewRating),
+        comment: reviewComment
+      });
+
+      setReviews([newReview, ...reviews]); // Optimistic update
+      toast.success('Thank you for your review!');
+      setIsReviewOpen(false);
+      setReviewComment('');
+      setReviewRating('5');
+    } catch (error) {
+      console.error("Review failed", error);
+      toast.error("Failed to submit review.");
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to send a message");
+      navigate('/login');
+      return;
+    }
+    if (!messageContent.trim()) {
+      toast.error('Please enter a message');
+      return;
+    }
+
+    try {
+      await chatService.sendMessage(
+        vendor.vendorId,
+        vendor.id,
+        messageContent,
+        user?.fullName || user?.email || 'Anonymous',
+        vendor.title
+      );
+      toast.success('Message sent successfully!');
+      setIsMessageOpen(false);
+      setMessageContent('');
+    } catch (error) {
+      console.error("Message send failed", error);
+      toast.error("Failed to send message.");
+    }
   };
 
   return (
@@ -81,18 +199,75 @@ export function VendorDetails() {
         </div>
       </div>
 
-      {/* Hero Image */}
-      <div className="relative h-96 overflow-hidden">
-        <ImageWithFallback
-          src={vendor.image}
-          alt={vendor.name}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-        {vendor.featured && (
-          <Badge className="absolute top-6 right-6 bg-rose-500 text-white">
-            Featured Vendor
-          </Badge>
+      {/* Hero Image Carousel */}
+      <div className="relative h-96 overflow-hidden group">
+        {vendor.imageUrls && vendor.imageUrls.length > 0 ? (
+          <>
+            {/* Current Image */}
+            <ImageWithFallback
+              src={vendor.imageUrls[currentImageIndex]}
+              alt={`${vendor.title} - Image ${currentImageIndex + 1}`}
+              className="w-full h-full object-cover transition-opacity duration-500"
+            />
+
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+            {/* Navigation Buttons - Only show if more than 1 image */}
+            {vendor.imageUrls.length > 1 && (
+              <>
+                {/* Previous Button */}
+                <button
+                  onClick={() => setCurrentImageIndex((prev) =>
+                    prev === 0 ? vendor.imageUrls!.length - 1 : prev - 1
+                  )}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                  aria-label="Previous image"
+                >
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+
+                {/* Next Button */}
+                <button
+                  onClick={() => setCurrentImageIndex((prev) =>
+                    prev === vendor.imageUrls!.length - 1 ? 0 : prev + 1
+                  )}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                  aria-label="Next image"
+                >
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                {/* Image Indicators */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                  {vendor.imageUrls.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentImageIndex
+                        ? 'bg-white w-8'
+                        : 'bg-white/50 hover:bg-white/75'
+                        }`}
+                      aria-label={`Go to image ${index + 1}`}
+                    />
+                  ))}
+                </div>
+
+                {/* Image Counter */}
+                <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm z-10">
+                  {currentImageIndex + 1} / {vendor.imageUrls.length}
+                </div>
+              </>
+            )}
+          </>
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+            <p className="text-gray-400">No images available</p>
+          </div>
         )}
       </div>
 
@@ -107,7 +282,7 @@ export function VendorDetails() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <CardTitle className="text-3xl">{vendor.name}</CardTitle>
+                      <CardTitle className="text-3xl">{vendor.title}</CardTitle>
                       <Badge variant="secondary" className="capitalize">
                         {vendor.category}
                       </Badge>
@@ -115,16 +290,16 @@ export function VendorDetails() {
                     <div className="flex flex-wrap items-center gap-4 text-gray-600">
                       <div className="flex items-center gap-1">
                         <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                        <span className="font-semibold">{vendor.rating}</span>
-                        <span className="text-sm">({vendor.reviewCount} reviews)</span>
+                        <span className="font-semibold">{vendor.avgRating || 'New'}</span>
+                        <span className="text-sm">({reviews.length} reviews)</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <MapPin className="w-4 h-4" />
-                        <span>{vendor.location}</span>
+                        <span>{vendor.city}, {vendor.district}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <DollarSign className="w-4 h-4" />
-                        <span>{vendor.priceRange}</span>
+                        <span>{vendor.priceMin} - {vendor.priceMax} LKR</span>
                       </div>
                     </div>
                   </div>
@@ -148,7 +323,7 @@ export function VendorDetails() {
             {/* Tabs */}
             <Tabs defaultValue="reviews" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="reviews">Reviews ({vendorReviews.length})</TabsTrigger>
+                <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
                 <TabsTrigger value="about">About</TabsTrigger>
               </TabsList>
 
@@ -205,16 +380,16 @@ export function VendorDetails() {
                   </Dialog>
                 </div>
 
-                {vendorReviews.length > 0 ? (
+                {reviews.length > 0 ? (
                   <div className="space-y-4">
-                    {vendorReviews.map((review) => (
+                    {reviews.map((review) => (
                       <Card key={review.id}>
                         <CardContent className="pt-6">
                           <div className="flex items-start justify-between mb-3">
                             <div>
-                              <p className="font-semibold text-gray-900">{review.userName}</p>
+                              <p className="font-semibold text-gray-900">{review.userName || `User #${review.userId}`}</p>
                               <p className="text-sm text-gray-500">
-                                {new Date(review.date).toLocaleDateString('en-US', {
+                                {new Date(review.createdAt || Date.now()).toLocaleDateString('en-US', {
                                   year: 'numeric',
                                   month: 'long',
                                   day: 'numeric'
@@ -226,8 +401,8 @@ export function VendorDetails() {
                                 <Star
                                   key={i}
                                   className={`w-4 h-4 ${i < review.rating
-                                      ? 'fill-yellow-400 text-yellow-400'
-                                      : 'text-gray-300'
+                                    ? 'fill-yellow-400 text-yellow-400'
+                                    : 'text-gray-300'
                                     }`}
                                 />
                               ))}
@@ -252,12 +427,12 @@ export function VendorDetails() {
                   <CardContent className="pt-6 space-y-4">
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2">Location</h4>
-                      <p className="text-gray-700">{vendor.location}</p>
+                      <p className="text-gray-700">{vendor.city}, {vendor.district}</p>
                     </div>
                     <Separator />
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2">Price Range</h4>
-                      <p className="text-gray-700">{vendor.priceRange}</p>
+                      <p className="text-gray-700">{vendor.priceMin} - {vendor.priceMax}</p>
                     </div>
                     <Separator />
                     <div>
@@ -285,15 +460,15 @@ export function VendorDetails() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 text-gray-700">
                     <Phone className="w-5 h-5 text-gray-400" />
-                    <span>+1 (555) 123-4567</span>
+                    <span>+94 (Available on request)</span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-700">
                     <Mail className="w-5 h-5 text-gray-400" />
-                    <span>contact@vendor.com</span>
+                    <span>Contact via form</span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-700">
                     <MapPin className="w-5 h-5 text-gray-400" />
-                    <span>{vendor.location}</span>
+                    <span>{vendor.city}</span>
                   </div>
                 </div>
 
@@ -337,7 +512,7 @@ export function VendorDetails() {
                           type="tel"
                           value={bookingPhone}
                           onChange={(e) => setBookingPhone(e.target.value)}
-                          placeholder="+1 (555) 000-0000"
+                          placeholder="+94 7X XXX XXXX"
                         />
                       </div>
                       <div className="space-y-2">
@@ -348,6 +523,16 @@ export function VendorDetails() {
                           value={bookingDate}
                           onChange={(e) => setBookingDate(e.target.value)}
                           min={new Date().toISOString().split('T')[0]}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="guests">Guest Count</Label>
+                        <Input
+                          id="guests"
+                          type="number"
+                          value={bookingGuestCount}
+                          onChange={(e) => setBookingGuestCount(Number(e.target.value))}
+                          placeholder="100"
                         />
                       </div>
                       <div className="space-y-2">
@@ -372,9 +557,39 @@ export function VendorDetails() {
                   </DialogContent>
                 </Dialog>
 
-                <Button variant="outline" className="w-full">
-                  Send Message
-                </Button>
+                <Dialog open={isMessageOpen} onOpenChange={setIsMessageOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="w-full gap-2">
+                      <Mail className="w-4 h-4" />
+                      Send Message
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Send Message to Vendor</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="message">Your Message</Label>
+                        <Textarea
+                          id="message"
+                          value={messageContent}
+                          onChange={(e) => setMessageContent(e.target.value)}
+                          placeholder="Ask about availability, pricing, or any questions..."
+                          rows={6}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setIsMessageOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleSendMessage} className="bg-rose-500 hover:bg-rose-600">
+                        Send Message
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
 
                 <div className="pt-4 border-t">
                   <p className="text-sm text-gray-500 text-center">
@@ -386,6 +601,9 @@ export function VendorDetails() {
           </div>
         </div>
       </div>
+
+
+      <Footer />
     </div>
   );
 }

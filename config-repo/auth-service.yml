@@ -16,7 +16,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
 
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
 jwt:
   secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-  access-token-expiration: 900000      # 15 mins
+  access-token-expiration: 1800000      # 30 mins
   refresh-token-expiration: 604800000  # 7 days

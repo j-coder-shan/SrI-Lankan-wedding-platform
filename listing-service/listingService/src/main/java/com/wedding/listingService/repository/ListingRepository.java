@@ -1,8 +1,7 @@
 package com.wedding.listingService.repository;
 
-
 import com.wedding.listingService.entity.Listing;
-import com.wedding.listingService.enums.Category;
+
 import com.wedding.listingService.enums.ListingStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +17,7 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
 
     List<Listing> findByVendorIdAndStatus(Long vendorId, ListingStatus status);
 
-    List<Listing> findByCategory(Category category);
+    List<Listing> findByCategory(String category);
 
     List<Listing> findByStatus(ListingStatus status);
 
@@ -27,4 +26,3 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
     @Query("SELECT l FROM Listing l WHERE l.status = 'PUBLISHED' ORDER BY l.avgRating DESC")
     List<Listing> findTopRatedListings();
 }
-

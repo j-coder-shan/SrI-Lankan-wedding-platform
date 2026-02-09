@@ -39,22 +39,26 @@ public class EnquiryService {
             throw new IllegalArgumentException("Date must be in the future");
         }
 
-        // Logic: Call Calendar Service
-        boolean isAvailable;
-        try {
-            isAvailable = calendarClient.checkAvailability(
-                    enquiry.getVendorId(),
-                    enquiry.getEventDate().toString(),
-                    "FULL_DAY" // Defaulting to full day for weddings
-            );
-        } catch (Exception ex) {
-            // If calendar-service is down or unreachable, surface a clear 503-style error
-            throw new IllegalStateException("Calendar service is unavailable: " + ex.getMessage());
-        }
-
-        if (!isAvailable) {
-            throw new IllegalStateException("Vendor is not available on this date");
-        }
+        // Logic: Call Calendar Service (Bypassed for Direct Booking Flow)
+        /*
+         * boolean isAvailable;
+         * try {
+         * isAvailable = calendarClient.checkAvailability(
+         * enquiry.getVendorId(),
+         * enquiry.getEventDate().toString(),
+         * "FULL_DAY" // Defaulting to full day for weddings
+         * );
+         * } catch (Exception ex) {
+         * // If calendar-service is down or unreachable, surface a clear 503-style
+         * error
+         * throw new IllegalStateException("Calendar service is unavailable: " +
+         * ex.getMessage());
+         * }
+         * 
+         * if (!isAvailable) {
+         * throw new IllegalStateException("Vendor is not available on this date");
+         * }
+         */
 
         enquiry.setStatus(EnquiryStatus.PENDING);
         return repository.save(enquiry);

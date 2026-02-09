@@ -30,7 +30,9 @@ public class ListingMapper {
                 .category(listing.getCategory())
                 .status(listing.getStatus())
                 .avgRating(listing.getAvgRating())
-                .imageUrls(listing.getImages().stream().map(image -> image.getUrl()).collect(Collectors.toList()));
+                .imageUrls(listing.getImages() != null
+                        ? listing.getImages().stream().map(image -> image.getUrl()).collect(Collectors.toList())
+                        : java.util.Collections.emptyList());
 
         // 2. Map the category-specific details object
         try {

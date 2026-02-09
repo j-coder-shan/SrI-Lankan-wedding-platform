@@ -26,10 +26,14 @@ public class SearchController {
     public List<SearchListing> searchListings(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String district,
+            @RequestParam(required = false) String category, // Added category filter
             @RequestParam(required = false) Double userBudget,
             @RequestParam(required = false) Double lat,
             @RequestParam(required = false) Double lon,
             @RequestParam(required = false, defaultValue = "10") Double maxDistanceKm) {
+
+        System.out.println("🔍 Search Request Received: keyword=" + keyword + ", district=" + district
+                + ", category=" + category + ", userBudget=" + userBudget);
 
         Query query = new Query();
 
@@ -37,14 +41,16 @@ public class SearchController {
         if (keyword != null && !keyword.isEmpty()) {
             query.addCriteria(Criteria.where("title").regex(keyword, "i") // Simple regex for partial match
                     .orOperator(Criteria.where("description").regex(keyword, "i")));
-
-            // Note: For a true text index search (Task 2.1), you would use:
-            // query.addCriteria(new Criteria().text(keyword));
         }
 
         // 2. Criteria.where("district").is(district) (Task 2.4)
-        if (district != null) {
-            query.addCriteria(Criteria.where("district").is(district.toUpperCase()));
+        if (district != null && !district.isEmpty()) {
+            query.addCriteria(Criteria.where("district").regex(district, "i")); // Case-insensitive
+        }
+
+        // New Category Criteria - Case Insensitive
+        if (category != null && !category.isEmpty()) {
+            query.addCriteria(Criteria.where("category").regex(category, "i"));
         }
 
         // 3. Criteria.where("priceMin").lte(userBudget) (Task 2.4)
@@ -52,7 +58,8 @@ public class SearchController {
             query.addCriteria(Criteria.where("priceMin").lte(userBudget));
         }
 
-        // 4. Geo Query: Criteria.where("location").near(Point).maxDistance(km) (Task 2.4)
+        // 4. Geo Query: Criteria.where("location").near(Point).maxDistance(km) (Task
+        // 2.4)
         if (lat != null && lon != null) {
             // MongoDB GeoJSON distance is typically in meters
             double maxDistanceMeters = maxDistanceKm * 1000;
@@ -68,6 +75,10 @@ public class SearchController {
 
         // Add sorting (e.g., sort by distance or rating) if needed
 
-        return mongoTemplate.find(query, SearchListing.class);
+        List<SearchListing> results = mongoTemplate.find(query, SearchListing.class);
+        System.out.println("✅ Search Results Found: " + results.size());
+        results.forEach(r -> System.out.println("   - Found: " + r.getTitle() + " (" + r.getCategory() + ")"));
+
+        return results;
     }
 }

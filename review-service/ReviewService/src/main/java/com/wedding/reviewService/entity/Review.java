@@ -1,6 +1,9 @@
 package com.wedding.reviewService.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.time.LocalDateTime;
 
@@ -13,14 +16,21 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long listingId; 
-    private Long userId; 
+    @NotNull(message = "Listing ID is required")
+    private Long listingId;
+
+    @NotNull(message = "User ID is required")
+    private Long userId;
+
+    @NotNull(message = "Rating is required")
+    @Min(value = 1, message = "Rating must be at least 1")
+    @Max(value = 5, message = "Rating must be at most 5")
     private Integer rating;
 
     @Column(columnDefinition = "TEXT")
     private String comment;
 
-    private LocalDateTime createdAt; 
+    private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {
