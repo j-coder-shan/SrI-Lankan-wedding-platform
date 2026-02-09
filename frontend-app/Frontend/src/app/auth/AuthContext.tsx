@@ -21,11 +21,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 /**
  * Provider component that wraps the application and makes auth state available to any child component.
  */
+// if user is not logged in, redirect to login page
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
     // Check for an existing logged-in user when the component mounts
+    // if user is logged in, set the user state
+    // if user is not logged in, set the user state to null
     useEffect(() => {
         const storedUser = authService.getCurrentUser();
         if (storedUser) {
