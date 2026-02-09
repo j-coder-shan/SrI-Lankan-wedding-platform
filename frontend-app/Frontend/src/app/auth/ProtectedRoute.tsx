@@ -25,6 +25,7 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
     const location = useLocation();
 
     // Show loading spinner/text while auth state is being determined
+    // if loading, show loading screen
     if (loading) {
         return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
     }
@@ -36,6 +37,7 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
     }
 
     // specific role check: if allowedRoles is provided, ensure user has one of them
+    // if user is not allowed, redirect to their appropriate dashboard
     if (allowedRoles && user && !allowedRoles.includes(user.role)) {
         // Redirect to their appropriate dashboard if they try to access unauthorized page
         if (user.role === 'ROLE_VENDOR') return <Navigate to="/dashboard/vendor" replace />;
