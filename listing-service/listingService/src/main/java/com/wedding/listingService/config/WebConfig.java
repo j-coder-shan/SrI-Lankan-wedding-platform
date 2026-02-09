@@ -10,8 +10,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Map /api/listings/uploads/** to the local file system uploads directory
-        // This matches the path forwarded by the API Gateway (without strip prefix)
         String uploadPath = Paths.get("uploads").toAbsolutePath().toUri().toString();
         if (!uploadPath.endsWith("/")) {
             uploadPath += "/";

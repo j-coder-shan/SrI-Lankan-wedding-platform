@@ -38,16 +38,13 @@ public class ListingServiceImpl implements ListingService {
     public void createListing(ListingRequestDTO requestDTO, Long vendorId) {
         Listing newListing = listingFactory.createListing(requestDTO);
         newListing.setVendorId(vendorId);
-        newListing.setStatus(ListingStatus.PUBLISHED); // Default status: PUBLISHED for immediate visibility
+        newListing.setStatus(ListingStatus.PUBLISHED);
 
         listingRepository.save(newListing);
 
-        // Publish to Kafka regardless of status
         publishListingEvent(newListing, "CREATE");
     }
 
-    // NOTE: Update logic is complex due to inheritance; simplified for presentation
-    // focus.
     @Override
     @Transactional
     public void updateListing(Long listingId, ListingRequestDTO requestDTO, Long vendorId) {
@@ -56,23 +53,16 @@ public class ListingServiceImpl implements ListingService {
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found with ID: " + listingId));
 
         if (!existingListing.getVendorId().equals(vendorId)) {
-            // Throw UnauthorizedAccess or similar exception
-            throw new RuntimeException("Unauthorized update attempt."); // Task 1.2: Ensure only owner can update
+            throw new RuntimeException("Unauthorized update attempt.");
         }
-
-        // Logic to delete the old subclass entity and save the new one if category
-        // changed is omitted
-        // here for simplicity, but the Factory is ready to create the new entity.
-        // For simple updates, map fields and save.
 
         Listing updatedListing = listingFactory.createListing(requestDTO);
         updatedListing.setId(listingId);
-        updatedListing.setVendorId(vendorId); // Keep existing ID and vendorId
-        updatedListing.setStatus(existingListing.getStatus()); // Keep existing status
+        updatedListing.setVendorId(vendorId);
+        updatedListing.setStatus(existingListing.getStatus());
 
         listingRepository.save(updatedListing);
 
-        // Publish to Kafka regardless of status
         publishListingEvent(updatedListing, "UPDATE");
     }
 
@@ -89,28 +79,22 @@ public class ListingServiceImpl implements ListingService {
         listingRepository.delete(listing);
         System.out.println("DEBUG: Deleted listing ID: " + listingId);
 
-        // Publish to Kafka
         publishListingEvent(listing, "DELETE");
     }
 
     @Override
     @Transactional
     public void updateListingRating(Long listingId, Double newAvgRating) {
-        // Task 3.2: Internal endpoint used by Review Service
         @SuppressWarnings("null")
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ListingNotFoundException("Listing not found"));
 
-        listing.setAvgRating(newAvgRating); // Update avgRating
+        listing.setAvgRating(newAvgRating);
         listingRepository.save(listing);
 
-        // Publish to Kafka regardless of status
         publishListingEvent(listing, "UPDATE");
     }
 
-    // ... Implement getListingById and getVendorListings using ListingMapper ...
-
-    // Helper method for Kafka Publishing (Task 2.2)
     private void publishListingEvent(Listing listing, String operation) {
         ListingEvent event = new ListingEvent();
         event.setId(listing.getId());
@@ -122,15 +106,11 @@ public class ListingServiceImpl implements ListingService {
         event.setDistrict(listing.getDistrict());
         event.setStatus(listing.getStatus() != null ? listing.getStatus().toString() : "PENDING");
         event.setAvgRating(listing.getAvgRating());
-        event.setOperation(operation); // CREATE, UPDATE, DELETE
+        event.setOperation(operation);
 
-        // Get main image URL if images exist
         if (listing.getImages() != null && !listing.getImages().isEmpty()) {
             event.setMainImageUrl(listing.getImages().get(0).getUrl());
         }
-
-        // Note: lat/lon would be extracted from listing if available
-        // For now, they'll be null unless you add location fields to Listing entity
 
         System.out.println("📨 Attempting to publish Kafka event for Listing ID: " + listing.getId());
         try {
@@ -153,7 +133,6 @@ public class ListingServiceImpl implements ListingService {
         }
     }
 
-    // Placeholder for other interface methods
     @SuppressWarnings("null")
     @Override
     public ListingResponseDTO getListingById(Long listingId) {
@@ -196,7 +175,6 @@ public class ListingServiceImpl implements ListingService {
                     throw e;
                 }
             } catch (IllegalArgumentException e) {
-                // Invalid category
                 System.out.println("DEBUG: Invalid category: " + category);
                 return List.of();
             }
@@ -233,7 +211,6 @@ public class ListingServiceImpl implements ListingService {
                 java.nio.file.Files.createDirectories(rootLocation);
             }
             java.nio.file.Files.copy(file.getInputStream(), rootLocation.resolve(filename));
-            // Return relative path matching WebConfig
             return "/api/listings/uploads/" + filename;
         } catch (java.io.IOException e) {
             throw new RuntimeException("Failed to store file.", e);
