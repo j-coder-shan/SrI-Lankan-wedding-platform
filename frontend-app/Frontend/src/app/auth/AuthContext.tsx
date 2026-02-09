@@ -38,6 +38,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, []);
 
     // Handle user login
+    // if user is logged in, set the user state
+    // if user is not logged in, set the user state to null
     const login = async (credentials: LoginRequest) => {
         await authService.login(credentials);
         const currentUser = authService.getCurrentUser();
