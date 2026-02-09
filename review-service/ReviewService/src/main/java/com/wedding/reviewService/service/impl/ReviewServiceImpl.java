@@ -22,11 +22,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Review createReviewAndSyncRating(ReviewRequest request) {
+    public Review createReview(ReviewRequest request, Long userId) {
 
         Review review = new Review();
         review.setListingId(request.getListingId());
-        review.setUserId(request.getUserId());
+        review.setUserId(userId);
         review.setRating(request.getRating());
         review.setComment(request.getComment());
 

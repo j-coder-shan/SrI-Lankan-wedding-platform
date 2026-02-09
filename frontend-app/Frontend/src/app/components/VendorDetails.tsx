@@ -133,15 +133,10 @@ export function VendorDetails() {
       navigate('/login');
       return;
     }
-    if (!reviewComment.trim()) {
-      toast.error('Please write a review comment');
-      return;
-    }
 
     try {
       const newReview = await reviewService.createReview({
         listingId: vendor.id,
-        userId: user?.id || 0,
         rating: Number(reviewRating),
         comment: reviewComment
       });
@@ -331,7 +326,7 @@ export function VendorDetails() {
                             <div>
                               <p className="font-semibold text-gray-900">{review.userName || `User #${review.userId}`}</p>
                               <p className="text-sm text-gray-500">
-                                {new Date(review.date || Date.now()).toLocaleDateString('en-US', {
+                                {new Date(review.createdAt || Date.now()).toLocaleDateString('en-US', {
                                   year: 'numeric',
                                   month: 'long',
                                   day: 'numeric'

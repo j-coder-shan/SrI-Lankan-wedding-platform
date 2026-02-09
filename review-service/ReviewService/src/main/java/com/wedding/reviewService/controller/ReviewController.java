@@ -3,6 +3,7 @@ package com.wedding.reviewService.controller;
 import com.wedding.reviewService.dto.ReviewRequest;
 import com.wedding.reviewService.entity.Review;
 import com.wedding.reviewService.service.ReviewService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,10 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<Review> createReview(@RequestBody ReviewRequest reviewRequest) {
-        Review savedReview = reviewService.createReviewAndSyncRating(reviewRequest);
+    public ResponseEntity<Review> createReview(
+            @Valid @RequestBody ReviewRequest reviewRequest,
+            @RequestHeader("X-Auth-User-Id") Long userId) {
+        Review savedReview = reviewService.createReview(reviewRequest, userId);
         return new ResponseEntity<>(savedReview, HttpStatus.CREATED);
     }
 

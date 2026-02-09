@@ -6,7 +6,7 @@ import com.wedding.reviewService.entity.Review;
 import java.util.List;
 
 public interface ReviewService {
-    Review createReviewAndSyncRating(ReviewRequest reviewRequest);
+    Review createReview(ReviewRequest reviewRequest, Long userId);
 
     List<Review> getReviewsByListing(Long listingId);
 }
