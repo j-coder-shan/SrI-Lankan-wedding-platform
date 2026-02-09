@@ -42,6 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     // Handle user registration
+    // TODO: Implement register function
     const register = async (data: RegisterRequest) => {
         await authService.register(data);
         const currentUser = authService.getCurrentUser();
