@@ -71,6 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             loading
         }}>
             {/* Render children only after loading checks are complete to prevent redirects/flashes */}
+            // if loading, show loading screen
             {!loading && children}
         </AuthContext.Provider>
     );
