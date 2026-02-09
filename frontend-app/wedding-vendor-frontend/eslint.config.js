@@ -24,10 +24,10 @@ export default tseslint.config(
       'react-refresh': reactRefresh,
     },
     rules: {
-      // React Hooks rules
+
       ...reactHooks.configs.recommended.rules,
 
-      // React Refresh rule
+
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
